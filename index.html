@@ -512,7 +512,7 @@ const HeroStatCard = () => {
               fontSize: 18, fontWeight: 700,
               color: C.text,
               letterSpacing: '-0.01em'
-            }}>MidfieldMaestros</div>
+            }}>Effortless VFC</div>
           </div>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -584,7 +584,7 @@ const HeroStatCard = () => {
           {[
             { val: '1,842', lbl: 'Total' },
             { val: '+1.2K', lbl: 'Rank ▲', up: true },
-            { val: '£2.4m', lbl: 'Bank' },
+            { val: '2.4', lbl: 'Bank' },
             { val: '17', lbl: 'GW Avg' }
           ].map((s, i) =>
           <div key={i} style={{
@@ -620,9 +620,9 @@ const HeroStatCard = () => {
         }}>Top Performers</div>
 
         {[
-          { name: 'Bellingham', role: 'CM · Captain', pts: 14, captain: true, deltaPct: 100 },
-          { name: 'Haaland', role: 'ST', pts: 16, deltaPct: 88 },
-          { name: 'Saka', role: 'LW', pts: 12, deltaPct: 70 }
+          { name: 'Chimere', role: 'MID · Captain', pts: 14, captain: true, deltaPct: 100 },
+          { name: 'Sabiboy', role: 'ATT', pts: 12, deltaPct: 88 },
+          { name: 'J. Okamm', role: 'MID', pts: 10, deltaPct: 70 }
         ].map((p, i) =>
         <div key={i} style={{
           display: 'grid', gridTemplateColumns: '1fr auto auto',
@@ -692,7 +692,7 @@ const HeroStatCard = () => {
           </svg>
         </div>
         <div>
-          <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 600, color: C.text }}>Haaland scored!</div>
+          <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 600, color: C.text }}>Sabiboy scored!</div>
           <div style={{ fontFamily: FONT, fontSize: 11, color: C.orangeAccent, fontWeight: 500 }}>+8 pts · 67'</div>
         </div>
       </div>
@@ -878,14 +878,14 @@ const FeatureCard = ({ n, title, desc, visual }) => {
 
 const MonitorVisual = () => {
   const fixtures = [
-    { home: 'ETU', away: 'ANF', score: '2–1', live: true, min: "67'" },
-    { home: 'STB', away: 'OTR', score: '0–0', live: true, min: "34'" },
-    { home: 'HBA', away: 'BUE', score: '1–0', live: false, fin: 'FT' }
+    { home: 'GCC', away: 'S11', score: '2–1', live: true, min: "67'" },
+    { home: 'NCH', away: 'LGN', score: '1–0', live: true, min: "34'" },
+    { home: 'EVC', away: 'TFC', score: '0–0', live: false, fin: 'FT' }
   ];
   const form = [
-    { name: 'Jordan Cole', club: 'ETU', amr: 9.1, trend: [6,7,8,9,9.1], up: true },
-    { name: 'Marcus Reid', club: 'ANF', amr: 8.4, trend: [8,8,7,8,8.4], up: false },
-    { name: 'Kai Mensah',  club: 'STB', amr: 7.9, trend: [7,8,7,8,7.9], up: true }
+    { name: 'J. Okamm', club: 'S11', amr: 8.8, trend: [7,8,8,9,8.8], up: true },
+    { name: 'Chimere',   club: 'NCH', amr: 8.5, trend: [8,8,7,8,8.5], up: false },
+    { name: 'Adefola',   club: 'GCC', amr: 7.9, trend: [7,8,7,8,7.9], up: true }
   ];
   return (
     <div style={{ position: 'absolute', inset: 16 }}>
@@ -946,9 +946,9 @@ const MonitorVisual = () => {
 const SquadVisual = () =>
 <div style={{ position: 'absolute', inset: 16, display: 'flex', flexDirection: 'column', gap: 6 }}>
   {[
-    ['ST', 'Haaland', '£14.0m'],
-    ['MID', 'Salah', '£12.5m'],
-    ['DEF', 'Saliba', '£6.0m']
+    ['ATT', 'Sabiboy', '9.5'],
+    ['MID', 'Chimere', '12.5'],
+    ['DEF', 'ComradeKev', '8.2']
   ].map(([pos, name, price], i) =>
   <div key={i} style={{
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -979,7 +979,7 @@ const SquadVisual = () =>
     letterSpacing: '0.1em', textTransform: 'uppercase'
   }}>
     <span>Budget</span>
-    <span>£32.5m / £100m</span>
+    <span>30.2 / 100</span>
   </div>
   <div style={{ height: 4, background: C.surf1, borderRadius: 2, overflow: 'hidden' }}>
     <div style={{
@@ -998,12 +998,12 @@ const LeagueVisual = () =>
     fontSize: 10, color: C.faint, fontWeight: 500,
     letterSpacing: '0.15em', textTransform: 'uppercase',
     marginBottom: 8
-  }}>Office Legends · 24 Members</div>
+  }}>West Africa Premier · GW 8</div>
   {[
     { rank: 1, name: 'You', pts: 1842, isYou: true },
-    { rank: 2, name: 'Marco', pts: 1791 },
-    { rank: 3, name: 'Priya', pts: 1768 },
-    { rank: 4, name: 'Tomás', pts: 1742 }
+    { rank: 2, name: 'ItalianMafia', pts: 1791 },
+    { rank: 3, name: 'Ziglar', pts: 1768 },
+    { rank: 4, name: 'Paganinparis', pts: 1742 }
   ].map((r, i) =>
   <div key={i} style={{
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -1032,10 +1032,10 @@ const LeagueVisual = () =>
 
 const PointsVisual = () => {
   const events = [
-    { time: "67'", text: 'Goal · Haaland', pts: '+4', c: C.success },
-    { time: "61'", text: 'Assist · Foden', pts: '+3', c: C.success },
-    { time: "44'", text: 'Yellow · Rice', pts: '−1', c: C.danger },
-    { time: "23'", text: 'Clean Sheet · Onana', pts: '+4', c: C.info }
+    { time: "67'", text: 'Goal · Sabiboy', pts: '+4', c: C.success },
+    { time: "61'", text: 'Assist · Adefola', pts: '+3', c: C.success },
+    { time: "44'", text: 'Yellow · ComradeKev', pts: '−1', c: C.danger },
+    { time: "23'", text: 'Clean Sheet · Nonso', pts: '+4', c: C.info }
   ];
 
   return (
@@ -1080,58 +1080,64 @@ const PointsVisual = () => {
 // =====================================================================
 const KITS = [
   {
-    id: 'bue-home',
-    club: 'Business Ends', short: 'BUE',
-    body: '#1a1a2e', bodyDark: '#0d0d1a',
-    sleeve: '#e2b04a', sleeveDark: '#b8882e',
-    accent: '#e2b04a',
+    id: 'bue', club: 'Business Ends', short: 'BUE',
+    body: '#1a1a2e', bodyDark: '#0d0d1a', sleeve: '#e2b04a', sleeveDark: '#b8882e', accent: '#e2b04a',
+    number: 5, sponsor: 'PRO',
+    keyPlayer: 'Oscar', position: 'CB', playerValue: '7.5', rank: '#17', amr: '7.8', ownedBy: '98%'
+  },
+  {
+    id: 'gcc', club: 'Get Clapped Cuz', short: 'GCC',
+    body: '#16a34a', bodyDark: '#14532d', sleeve: '#000000', sleeveDark: '#1a1a1a', accent: '#fbbf24',
+    number: 8, sponsor: 'PRO',
+    keyPlayer: 'Adefola', position: 'MID', playerValue: '8.5', rank: '#1', amr: '7.9', ownedBy: '80%'
+  },
+  {
+    id: 's11', club: 'Solo 11', short: 'S11',
+    body: '#0ea5e9', bodyDark: '#0369a1', sleeve: '#ffffff', sleeveDark: '#e2e8f0', accent: '#ffffff',
     number: 10, sponsor: 'PRO',
-    keyPlayer: 'Oscar', playerValue: '£7.5M', rank: '#17', amr: '7.8', ownedBy: '100%'
+    keyPlayer: 'J. Okamm', position: 'MID', playerValue: '10.5', rank: '#2', amr: '8.8', ownedBy: '90%'
   },
   {
-    id: 'anf-home',
-    club: 'Anfield FC', short: 'ANF',
-    body: '#C8102E', bodyDark: '#7a0a1c',
-    sleeve: '#C8102E', sleeveDark: '#7a0a1c',
-    accent: '#ffc800',
-    number: 11, sponsor: 'PRO',
-    keyPlayer: 'Marcus Reid', playerValue: '£9.2M', rank: '#3', amr: '8.4', ownedBy: '78%'
-  },
-  {
-    id: 'etu-home',
-    club: 'Etihad United', short: 'ETU',
-    body: '#6CABDD', bodyDark: '#3a7eb0',
-    sleeve: '#6CABDD', sleeveDark: '#3a7eb0',
-    accent: '#FFFFFF',
-    number: 9, sponsor: 'PRO',
-    keyPlayer: 'Jordan Cole', playerValue: '£8.8M', rank: '#1', amr: '8.9', ownedBy: '64%'
-  },
-  {
-    id: 'hba-home',
-    club: 'Highbury Athletic', short: 'HBA',
-    body: '#E8181A', bodyDark: '#a30c0e',
-    sleeve: '#FFFFFF', sleeveDark: '#d6d6d6',
-    accent: '#FFFFFF',
+    id: 'nch', club: 'Namless Chaos', short: 'NCH',
+    body: '#7f1d1d', bodyDark: '#450a0a', sleeve: '#94a3b8', sleeveDark: '#64748b', accent: '#c0c0c0',
     number: 7, sponsor: 'PRO',
-    keyPlayer: 'Dele Santos', playerValue: '£7.1M', rank: '#5', amr: '7.5', ownedBy: '52%'
+    keyPlayer: 'Chimere', position: 'MID', playerValue: '12.5', rank: '#3', amr: '8.5', ownedBy: '95%'
   },
   {
-    id: 'stb-home',
-    club: 'Stamford Blues', short: 'STB',
-    body: '#034694', bodyDark: '#022860',
-    sleeve: '#034694', sleeveDark: '#022860',
-    accent: '#ffc800',
-    number: 20, sponsor: 'PRO',
-    keyPlayer: 'Kai Mensah', playerValue: '£8.0M', rank: '#8', amr: '7.9', ownedBy: '45%'
+    id: 'lgn', club: 'Legion Esports', short: 'LGN',
+    body: '#4c1d95', bodyDark: '#2e1065', sleeve: '#06b6d4', sleeveDark: '#0891b2', accent: '#06b6d4',
+    number: 22, sponsor: 'PRO',
+    keyPlayer: 'ItalianMafia', position: 'MID', playerValue: '7.5', rank: '#13', amr: '8.2', ownedBy: '25%'
   },
   {
-    id: 'otr-home',
-    club: 'Old Trafford', short: 'OTR',
-    body: '#DA291C', bodyDark: '#8c1810',
-    sleeve: '#000000', sleeveDark: '#0a0a0a',
-    accent: '#ffc800',
-    number: 10, sponsor: 'PRO',
-    keyPlayer: 'Ryan Osei', playerValue: '£6.9M', rank: '#12', amr: '7.2', ownedBy: '38%'
+    id: 'tfc', club: 'Talker FC', short: 'TFC',
+    body: '#15803d', bodyDark: '#14532d', sleeve: '#ffffff', sleeveDark: '#f0fdf4', accent: '#ffffff',
+    number: 4, sponsor: 'PRO',
+    keyPlayer: 'ComradeKev', position: 'DEF', playerValue: '8.2', rank: '#12', amr: '7.5', ownedBy: '40%'
+  },
+  {
+    id: 'evc', club: 'Effortless VFC', short: 'EVC',
+    body: '#ea580c', bodyDark: '#9a3412', sleeve: '#1c1c1c', sleeveDark: '#0a0a0a', accent: '#ffffff',
+    number: 9, sponsor: 'PRO',
+    keyPlayer: 'Sabiboy', position: 'ATT', playerValue: '9.5', rank: '#4', amr: '7.9', ownedBy: '63%'
+  },
+  {
+    id: 'bvc', club: 'Blvckcrusaders', short: 'BVC',
+    body: '#1c1c1c', bodyDark: '#0a0a0a', sleeve: '#dc2626', sleeveDark: '#991b1b', accent: '#dc2626',
+    number: 2, sponsor: 'PRO',
+    keyPlayer: 'Ziglar', position: 'DEF', playerValue: '7.9', rank: '#16', amr: '8.1', ownedBy: '5%'
+  },
+  {
+    id: 'pfc', club: 'Protege FC', short: 'PFC',
+    body: '#0e7490', bodyDark: '#164e63', sleeve: '#ffffff', sleeveDark: '#f0f9ff', accent: '#fbbf24',
+    number: 1, sponsor: 'PRO',
+    keyPlayer: 'Nonso', position: 'GK', playerValue: '6.0', rank: '#7', amr: '7.5', ownedBy: '95%'
+  },
+  {
+    id: 'psp', club: 'Provela_SP3', short: 'PSP',
+    body: '#6d28d9', bodyDark: '#4c1d95', sleeve: '#f97316', sleeveDark: '#c2410c', accent: '#f97316',
+    number: 6, sponsor: 'PRO',
+    keyPlayer: 'Paganinparis', position: 'CB', playerValue: '5.7', rank: '#10', amr: '7.8', ownedBy: '10%'
   }
 ];
 
@@ -1477,8 +1483,8 @@ const JerseyShowcase = () => {
 
         {/* Kit info */}
         <div style={{ maxWidth: 720, margin: '32px auto 0', textAlign: 'center' }}>
-          {/* KEY PLAYER badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+          {/* KEY PLAYER + POSITION badges */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <span style={{
               fontFamily: FONT,
               fontSize: 11, fontWeight: 700,
@@ -1488,6 +1494,16 @@ const JerseyShowcase = () => {
               borderRadius: 6,
               letterSpacing: '0.14em', textTransform: 'uppercase'
             }}>Key Player</span>
+            <span style={{
+              fontFamily: FONT,
+              fontSize: 11, fontWeight: 700,
+              padding: '5px 12px',
+              background: C.surf3,
+              color: C.orangeAccent,
+              border: `1px solid rgba(255,138,77,0.35)`,
+              borderRadius: 6,
+              letterSpacing: '0.12em', textTransform: 'uppercase'
+            }}>{kit.position}</span>
           </div>
 
           {/* Player name */}
@@ -1904,10 +1920,10 @@ const PhoneHome = () =>
   <div style={{ marginTop: 12, fontFamily: FONT, fontSize: 9, color: C.faint, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Your XI</div>
 
   {[
-    { name: 'Haaland', pos: 'ST', pts: 16, c: true },
-    { name: 'Salah', pos: 'RW', pts: 10 },
-    { name: 'Saka', pos: 'LW', pts: 12 },
-    { name: 'Bellingham', pos: 'CM', pts: 9 }
+    { name: 'Sabiboy', pos: 'ATT', pts: 12, c: true },
+    { name: 'Adefola', pos: 'MID', pts: 9 },
+    { name: 'Chimere', pos: 'MID', pts: 11 },
+    { name: 'ComradeKev', pos: 'DEF', pts: 8 }
   ].map((p, i) =>
   <div key={i} style={{
     marginTop: 8,
@@ -1955,8 +1971,8 @@ const PhoneMatch = () =>
   <div style={{ padding: '20px 16px', background: 'linear-gradient(180deg, rgba(255, 72, 0, 0.12) 0%, transparent 100%)' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <div style={{ textAlign: 'center', flex: 1 }}>
-        <div style={{ width: 44, height: 44, borderRadius: 10, background: '#6CABDD', margin: '0 auto 8px' }} />
-        <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: C.text }}>ETU</div>
+        <div style={{ width: 44, height: 44, borderRadius: 10, background: '#16a34a', margin: '0 auto 8px' }} />
+        <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: C.text }}>GCC</div>
       </div>
       <div style={{ textAlign: 'center' }}>
         <div style={{
@@ -1968,8 +1984,8 @@ const PhoneMatch = () =>
         <div style={{ fontFamily: FONT, fontSize: 32, fontWeight: 800, color: C.text, margin: '4px 0', letterSpacing: '-0.03em' }}>2 — 1</div>
       </div>
       <div style={{ textAlign: 'center', flex: 1 }}>
-        <div style={{ width: 44, height: 44, borderRadius: 10, background: '#C8102E', margin: '0 auto 8px' }} />
-        <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: C.text }}>ANF</div>
+        <div style={{ width: 44, height: 44, borderRadius: 10, background: '#0ea5e9', margin: '0 auto 8px' }} />
+        <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: C.text }}>S11</div>
       </div>
     </div>
   </div>
@@ -1982,9 +1998,9 @@ const PhoneMatch = () =>
       marginBottom: 10
     }}>Your Players</div>
     {[
-      { name: 'Haaland', ev: "Goal · 67'", pts: '+8', new: true },
-      { name: 'Salah', ev: '4 shots', pts: '+2' },
-      { name: 'Foden', ev: "Assist · 23'", pts: '+3' }
+      { name: 'Sabiboy', ev: "Goal · 67'", pts: '+8', new: true },
+      { name: 'Adefola', ev: '4 shots', pts: '+2' },
+      { name: 'J. Okamm', ev: "Assist · 23'", pts: '+3' }
     ].map((e, i) =>
     <div key={i} style={{
       marginBottom: 8,
