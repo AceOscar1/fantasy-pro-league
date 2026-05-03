@@ -1217,7 +1217,7 @@ const JerseyShowcase = () => {
         </div>
 
         {/* Carousel stage */}
-        <div style={{ position: 'relative', height: 540 }}>
+        <div style={{ position: 'relative', height: 540, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           {/* Spotlight halos */}
           <div style={{
             position: 'absolute',
@@ -1290,12 +1290,11 @@ const JerseyShowcase = () => {
             );
           })}
 
-          {/* Centre jersey */}
+          {/* Centre jersey — flex child, no absolute positioning so animation doesn't break centering */}
           <div style={{
-            position: 'absolute',
-            left: '50%', top: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: 'relative',
             zIndex: 20,
+            flexShrink: 0,
             animation: 'jerseyFloatleft 5s ease-in-out infinite'
           }}>
             <PremiumJersey kit={kit} size={340} />
