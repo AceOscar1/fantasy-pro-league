@@ -39,6 +39,52 @@
   }
   button, input { font-family: inherit; }
   input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+  /* ---------- Responsive ---------- */
+  html, body { overflow-x: hidden; }
+  .nav-ham { display: none; align-items: center; justify-content: center; }
+
+  @media (max-width: 1023px) {
+    .hero-inner { grid-template-columns: 1fr !important; }
+    .hero-stat-wrap { display: none !important; }
+    .features-cards { grid-template-columns: repeat(2, 1fr) !important; }
+    .features-header { flex-direction: column !important; align-items: flex-start !important; }
+    .app-layout { grid-template-columns: 1fr !important; gap: 48px !important; }
+    .phone-showcase { display: none !important; }
+    .footer-cols { grid-template-columns: 1fr 1fr !important; gap: 40px !important; }
+  }
+
+  @media (max-width: 767px) {
+    section { padding-left: 20px !important; padding-right: 20px !important; }
+    footer { padding-left: 20px !important; padding-right: 20px !important; }
+
+    .nav-root { padding: 16px 20px !important; }
+    .nav-links { display: none !important; }
+    .nav-ham { display: flex !important; }
+
+    .hero-inner { padding-left: 0 !important; padding-right: 0 !important; grid-template-columns: 1fr !important; gap: 40px !important; }
+    .hero-stat-wrap { display: none !important; }
+    .stats-strip { gap: 16px !important; }
+
+    .features-cards { grid-template-columns: 1fr !important; }
+    .features-header { flex-direction: column !important; align-items: flex-start !important; gap: 20px !important; margin-bottom: 40px !important; }
+
+    .carousel-stage { height: 380px !important; }
+    .side-jersey-item { display: none !important; }
+    .kit-chips-row { flex-direction: column !important; align-items: center !important; }
+
+    .waitlist-card { padding: 40px 24px !important; }
+    .waitlist-form-row { flex-direction: column !important; }
+    .waitlist-form-row input { width: 100% !important; box-sizing: border-box !important; }
+    .waitlist-form-row button { width: 100% !important; }
+
+    .app-layout { grid-template-columns: 1fr !important; }
+    .phone-showcase { display: none !important; }
+
+    .footer-cols { grid-template-columns: 1fr !important; gap: 32px !important; }
+
+    input { font-size: 16px !important; }
+  }
 </style>
 </head>
 <body>
@@ -229,6 +275,7 @@ const GradientText = ({ children, style = {} }) =>
 // ---------- NAV ----------
 const Nav = () => {
   const [scrolled, setScrolled] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll);
@@ -236,27 +283,27 @@ const Nav = () => {
   }, []);
 
   return (
-    <nav style={{
+    <nav className="nav-root" style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
       padding: '20px 48px',
-      background: scrolled ? 'rgba(7, 2, 15, 0.85)' : 'transparent',
-      backdropFilter: scrolled ? 'blur(16px) saturate(140%)' : 'none',
-      WebkitBackdropFilter: scrolled ? 'blur(16px) saturate(140%)' : 'none',
+      background: scrolled || menuOpen ? 'rgba(7, 2, 15, 0.95)' : 'transparent',
+      backdropFilter: scrolled || menuOpen ? 'blur(16px) saturate(140%)' : 'none',
+      WebkitBackdropFilter: scrolled || menuOpen ? 'blur(16px) saturate(140%)' : 'none',
       borderBottom: scrolled ? `1px solid ${C.hairline}` : '1px solid transparent',
-      transition: 'all 0.3s'
+      transition: 'background 0.3s, border-color 0.3s'
     }}>
       <div style={{
         maxWidth: 1400, margin: '0 auto',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center'
       }}>
         <Logo size={22} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+        {/* Desktop links */}
+        <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
           {['Why Play FPL', 'Get the App'].map((l) =>
           <a key={l} href="#" style={{
             fontFamily: FONT, fontSize: 14, fontWeight: 500,
             color: C.text, textDecoration: 'none',
-            transition: 'opacity 0.2s',
-            opacity: 0.92
+            transition: 'opacity 0.2s', opacity: 0.92
           }}
           onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
           onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.92'; }}>
@@ -265,7 +312,40 @@ const Nav = () => {
           )}
           <GradientButton size="sm">Join Waitlist</GradientButton>
         </div>
+        {/* Hamburger — shown on mobile via CSS */}
+        <button
+          className="nav-ham"
+          onClick={() => setMenuOpen((o) => !o)}
+          style={{
+            display: 'none', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+            gap: 5, width: 44, height: 44,
+            background: 'transparent', border: 'none', cursor: 'pointer', padding: 0
+          }}>
+          <span style={{ width: 22, height: 2, background: C.text, borderRadius: 2, display: 'block', transition: 'all 0.3s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
+          <span style={{ width: 22, height: 2, background: C.text, borderRadius: 2, display: 'block', transition: 'all 0.3s', opacity: menuOpen ? 0 : 1 }} />
+          <span style={{ width: 22, height: 2, background: C.text, borderRadius: 2, display: 'block', transition: 'all 0.3s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
+        </button>
       </div>
+      {/* Mobile overlay menu */}
+      {menuOpen &&
+      <div style={{
+        padding: '20px 20px 30px',
+        display: 'flex', flexDirection: 'column', gap: 4,
+        borderTop: `1px solid ${C.hairline}`
+      }}>
+        {['Why Play FPL', 'Get the App'].map((l) =>
+        <a key={l} href="#" onClick={() => setMenuOpen(false)} style={{
+          fontFamily: FONT, fontSize: 18, fontWeight: 600,
+          color: C.text, textDecoration: 'none',
+          padding: '14px 0',
+          borderBottom: `1px solid ${C.hairlineSoft}`
+        }}>{l}</a>
+        )}
+        <div style={{ marginTop: 16 }}>
+          <GradientButton size="lg" style={{ width: '100%' }}>Join Waitlist</GradientButton>
+        </div>
+      </div>
+      }
     </nav>
   );
 };
@@ -293,7 +373,7 @@ const Hero = () =>
     WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 100%)'
   }} />
 
-  <div style={{
+  <div className="hero-inner" style={{
     maxWidth: 1400, margin: '0 auto', padding: '0 48px',
     position: 'relative',
     display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 64, alignItems: 'center'
@@ -341,7 +421,7 @@ const Hero = () =>
       </div>
 
       {/* Stats strip */}
-      <div style={{
+      <div className="stats-strip" style={{
         display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24,
         paddingTop: 32,
         borderTop: `1px solid ${C.hairline}`
@@ -372,7 +452,9 @@ const Hero = () =>
     </div>
 
     {/* RIGHT */}
-    <HeroStatCard />
+    <div className="hero-stat-wrap">
+      <HeroStatCard />
+    </div>
   </div>
 </section>;
 
@@ -640,7 +722,7 @@ const Features = () => {
       <div style={{ position: 'absolute', inset: 0, background: BG_GLOWS.topRight, pointerEvents: 'none' }} />
 
       <div style={{ maxWidth: 1400, margin: '0 auto', position: 'relative' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64, gap: 40, flexWrap: 'wrap' }}>
+        <div className="features-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64, gap: 40, flexWrap: 'wrap' }}>
           <div>
             <Eyebrow>Why Play</Eyebrow>
             <h2 style={{
@@ -667,7 +749,7 @@ const Features = () => {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 22 }}>
+        <div className="features-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 22 }}>
           {items.map((f, i) => <FeatureCard key={i} {...f} />)}
         </div>
       </div>
@@ -1157,6 +1239,7 @@ const SideJersey = ({ kit, offset, onClick }) => {
   const abs = Math.abs(offset);
   return (
     <div
+      className="side-jersey-item"
       onClick={onClick}
       style={{
         position: 'absolute',
@@ -1223,7 +1306,7 @@ const JerseyShowcase = () => {
         </div>
 
         {/* Carousel stage */}
-        <div style={{ position: 'relative', height: 540, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div className="carousel-stage" style={{ position: 'relative', height: 540, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           {/* Spotlight halos */}
           <div style={{
             position: 'absolute',
@@ -1372,7 +1455,7 @@ const JerseyShowcase = () => {
           }}>{kit.club}</div>
 
           {/* Info chips: Club Value · Key Player · League Rank */}
-          <div style={{
+          <div className="kit-chips-row" style={{
             display: 'flex', justifyContent: 'center', gap: 8,
             flexWrap: 'wrap',
             marginBottom: 18
@@ -1483,7 +1566,7 @@ const Waitlist = () => {
       <div style={{ position: 'absolute', inset: 0, background: BG_GLOWS.topLeft, pointerEvents: 'none' }} />
 
       <div style={{ maxWidth: 920, margin: '0 auto', position: 'relative' }}>
-        <div style={{
+        <div className="waitlist-card" style={{
           position: 'relative',
           background: `linear-gradient(180deg, ${C.surf3} 0%, ${C.surf1} 100%)`,
           border: '1px solid rgba(255, 138, 77, 0.32)',
@@ -1527,7 +1610,7 @@ const Waitlist = () => {
             </p>
 
             {!submitted ?
-            <form onSubmit={submit} style={{ display: 'flex', gap: 12, maxWidth: 520, margin: '0 auto' }}>
+            <form onSubmit={submit} className="waitlist-form-row" style={{ display: 'flex', gap: 12, maxWidth: 520, margin: '0 auto' }}>
               <input
                 type="email"
                 value={email}
@@ -1597,7 +1680,7 @@ const GetTheApp = () =>
 }}>
   <div style={{ position: 'absolute', inset: 0, background: BG_GLOWS.topRight, pointerEvents: 'none' }} />
 
-  <div style={{
+  <div className="app-layout" style={{
     maxWidth: 1400, margin: '0 auto',
     display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center',
     position: 'relative'
@@ -1651,7 +1734,7 @@ const GetTheApp = () =>
       </div>
     </div>
 
-    <div style={{ position: 'relative', height: 600, perspective: 1400 }}>
+    <div className="phone-showcase" style={{ position: 'relative', height: 600, perspective: 1400 }}>
       <div style={{
         position: 'absolute',
         left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
@@ -1883,7 +1966,7 @@ const Footer = () =>
   borderTop: `1px solid ${C.hairlineSoft}`
 }}>
   <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-    <div style={{
+    <div className="footer-cols" style={{
       display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
       gap: 60, marginBottom: 60
     }}>
