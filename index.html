@@ -925,6 +925,7 @@ const KITS = [
     sleeve: '#FFFFFF', sleeveDark: '#d6d6d6',
     accent: '#FFFFFF',
     number: 7, sponsor: 'PRO',
+    value: '£312M', keyPlayer: 'Danny Ashford', rank: 'Rank #5',
     stats: [
       { lbl: 'Squad Sync', val: '92%' },
       { lbl: 'Owned by', val: '64%' }
@@ -939,6 +940,7 @@ const KITS = [
     sleeve: '#ffc800', sleeveDark: '#c79e00',
     accent: '#ffc800',
     number: 7, sponsor: 'PRO',
+    value: '£312M', keyPlayer: 'Danny Ashford', rank: 'Rank #5',
     stats: [
       { lbl: 'Squad Sync', val: '88%' },
       { lbl: 'Owned by', val: '41%' }
@@ -953,6 +955,7 @@ const KITS = [
     sleeve: '#C8102E', sleeveDark: '#7a0a1c',
     accent: '#ffc800',
     number: 11, sponsor: 'PRO',
+    value: '£521M', keyPlayer: 'Marcus Reid', rank: 'Rank #1',
     stats: [
       { lbl: 'Squad Sync', val: '95%' },
       { lbl: 'Owned by', val: '78%' }
@@ -967,6 +970,7 @@ const KITS = [
     sleeve: '#6CABDD', sleeveDark: '#3a7eb0',
     accent: '#FFFFFF',
     number: 9, sponsor: 'PRO',
+    value: '£489M', keyPlayer: 'Luca Ferretti', rank: 'Rank #2',
     stats: [
       { lbl: 'Squad Sync', val: '90%' },
       { lbl: 'Owned by', val: '71%' }
@@ -981,6 +985,7 @@ const KITS = [
     sleeve: '#034694', sleeveDark: '#022860',
     accent: '#ffc800',
     number: 20, sponsor: 'PRO',
+    value: '£245M', keyPlayer: 'Javi Moreno', rank: 'Rank #7',
     stats: [
       { lbl: 'Squad Sync', val: '86%' },
       { lbl: 'Owned by', val: '52%' }
@@ -995,6 +1000,7 @@ const KITS = [
     sleeve: '#000000', sleeveDark: '#0a0a0a',
     accent: '#ffc800',
     number: 10, sponsor: 'PRO',
+    value: '£378M', keyPlayer: 'Callum Voss', rank: 'Rank #3',
     stats: [
       { lbl: 'Squad Sync', val: '83%' },
       { lbl: 'Owned by', val: '46%' }
@@ -1343,7 +1349,8 @@ const JerseyShowcase = () => {
 
         {/* Kit info */}
         <div style={{ maxWidth: 720, margin: '32px auto 0', textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+          {/* HOME / AWAY badge */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
             <span style={{
               fontFamily: FONT,
               fontSize: 11, fontWeight: 700,
@@ -1354,14 +1361,51 @@ const JerseyShowcase = () => {
               letterSpacing: '0.14em', textTransform: 'uppercase'
             }}>{kit.label}</span>
           </div>
+
+          {/* Club name */}
           <div style={{
             fontFamily: FONT,
             fontSize: 28, fontWeight: 700,
             color: C.text,
             letterSpacing: '-0.025em',
-            marginBottom: 22
+            marginBottom: 18
           }}>{kit.club}</div>
 
+          {/* Info chips: Club Value · Key Player · League Rank */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: 8,
+            flexWrap: 'wrap',
+            marginBottom: 18
+          }}>
+            {[
+              { lbl: 'Club Value', val: kit.value },
+              { lbl: 'Key Player', val: kit.keyPlayer },
+              { lbl: 'League', val: kit.rank }
+            ].map((chip, i) =>
+            <div key={i} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: '#180a28',
+              border: '1px solid rgba(255, 138, 77, 0.2)',
+              borderRadius: 8,
+              padding: '7px 14px'
+            }}>
+              <span style={{
+                fontFamily: FONT,
+                fontSize: 9, fontWeight: 600,
+                color: C.orangeAccent,
+                letterSpacing: '0.14em', textTransform: 'uppercase'
+              }}>{chip.lbl}</span>
+              <span style={{
+                fontFamily: FONT,
+                fontSize: 13, fontWeight: 700,
+                color: C.text,
+                letterSpacing: '-0.01em'
+              }}>{chip.val}</span>
+            </div>
+            )}
+          </div>
+
+          {/* Squad Sync / Owned By cards */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
             {kit.stats.map((s, i) =>
             <div key={i} style={{
