@@ -417,7 +417,7 @@ const Hero = () =>
         maxWidth: 560,
         margin: 0, marginBottom: 36
       }}>
-        Fantasy Pro League brings competitive virtual football into a fantasy format where real club performances, player stats, and weekly results shape the leaderboard.
+        Fantasy Pro League transforms EA Sports FC Clubs action into a competitive fantasy experience, where club performances, player statistics and weekly results drive rankings and offer rewards for everyone.
       </p>
 
       <div className="hero-buttons" style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 56, flexWrap: 'wrap' }}>
@@ -441,7 +441,7 @@ const Hero = () =>
       }}>
         {[
           { val: '£250K', lbl: 'Prize Pool' },
-          { val: '38', lbl: 'Match Weeks' },
+          { val: '13', lbl: 'Match Weeks' },
           { val: '48,212', lbl: 'Managers' }
         ].map((s, i) =>
         <div key={i}>
@@ -707,20 +707,20 @@ const Features = () => {
   const items = [
     {
       n: '01',
-      title: 'Pick Your Squad',
-      desc: 'Draft 15 footballers within a £100m budget. Real Premier League players, real-time prices, weekly transfer windows.',
-      visual: 'squad'
+      title: 'Step 1 — Monitor the Competition',
+      desc: 'Track fixtures, results, and live performances across the West Africa Premier. Stay updated with real-time stats, form, and standout players to gain the edge before every matchweek.',
+      visual: 'monitor'
     },
     {
       n: '02',
-      title: 'Create and Join Leagues',
-      desc: 'Spin up private leagues with friends, climb global ladders, or join brand-sponsored cups with cash prize pools.',
-      visual: 'league'
+      title: 'Step 2 — Pick Your Squad',
+      desc: 'Draft 15 footballers within your budget and build a balanced team. Choose wisely, every selection counts as you combine star power, form, and strategy to outscore your rivals.',
+      visual: 'squad'
     },
     {
       n: '03',
-      title: 'Earn Fantasy Points',
-      desc: 'Goals, assists, clean sheets, bonus points — every touch counts. Live scoring updates the second they happen.',
+      title: 'Step 3 — Earn Fantasy Points',
+      desc: 'Score points based on real in-game performances. Goals, assists, clean sheets, and ratings all contribute. Climb the leaderboard and compete for rewards every week.',
       visual: 'points'
     }
   ];
@@ -834,6 +834,7 @@ const FeatureCard = ({ n, title, desc, visual }) => {
         position: 'relative',
         overflow: 'hidden'
       }}>
+        {visual === 'monitor' && <MonitorVisual />}
         {visual === 'squad' && <SquadVisual />}
         {visual === 'league' && <LeagueVisual />}
         {visual === 'points' && <PointsVisual />}
@@ -871,6 +872,73 @@ const FeatureCard = ({ n, title, desc, visual }) => {
           <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
         </svg>
       </div>
+    </div>
+  );
+};
+
+const MonitorVisual = () => {
+  const fixtures = [
+    { home: 'ETU', away: 'ANF', score: '2–1', live: true, min: "67'" },
+    { home: 'STB', away: 'OTR', score: '0–0', live: true, min: "34'" },
+    { home: 'HBA', away: 'BUE', score: '1–0', live: false, fin: 'FT' }
+  ];
+  const form = [
+    { name: 'Jordan Cole', club: 'ETU', amr: 9.1, trend: [6,7,8,9,9.1], up: true },
+    { name: 'Marcus Reid', club: 'ANF', amr: 8.4, trend: [8,8,7,8,8.4], up: false },
+    { name: 'Kai Mensah',  club: 'STB', amr: 7.9, trend: [7,8,7,8,7.9], up: true }
+  ];
+  return (
+    <div style={{ position: 'absolute', inset: 16 }}>
+      {/* Live fixtures strip */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+        {fixtures.map((f, i) =>
+        <div key={i} style={{
+          flex: 1, background: C.surf1, border: `1px solid ${f.live ? 'rgba(34,197,94,0.25)' : C.hairlineSoft}`,
+          borderRadius: 8, padding: '6px 8px', textAlign: 'center'
+        }}>
+          <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, color: C.text, letterSpacing: '-0.01em' }}>
+            {f.home} <span style={{ color: C.faint }}>v</span> {f.away}
+          </div>
+          <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 800, color: C.text, margin: '3px 0 2px', letterSpacing: '-0.02em' }}>{f.score}</div>
+          {f.live
+            ? <div style={{ fontFamily: FONT, fontSize: 8, fontWeight: 600, color: C.success, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                <span style={{ width: 4, height: 4, borderRadius: '50%', background: C.success, display: 'inline-block' }} />{f.min}
+              </div>
+            : <div style={{ fontFamily: FONT, fontSize: 8, fontWeight: 500, color: C.faint }}>{f.fin}</div>
+          }
+        </div>
+        )}
+      </div>
+      {/* Form leaders */}
+      <div style={{ fontFamily: FONT, fontSize: 9, color: C.faint, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 6 }}>In-Form Players</div>
+      {form.map((p, i) =>
+      <div key={i} style={{
+        display: 'flex', alignItems: 'center', gap: 8,
+        padding: '6px 0',
+        borderBottom: i < form.length - 1 ? `1px solid ${C.hairlineSoft}` : 'none'
+      }}>
+        <div style={{
+          width: 26, height: 26, borderRadius: 6, flexShrink: 0,
+          background: 'rgba(255,138,77,0.1)', border: '1px solid rgba(255,138,77,0.25)',
+          display: 'grid', placeItems: 'center',
+          fontFamily: FONT, fontSize: 7, fontWeight: 700, color: C.orangeAccent
+        }}>{p.club}</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: C.text }}>{p.name}</div>
+        </div>
+        {/* Spark line */}
+        <svg width="36" height="16" viewBox="0 0 36 16">
+          <polyline
+            points={p.trend.map((v, j) => `${j * 9},${16 - ((v - 6) / 3.5) * 16}`).join(' ')}
+            fill="none" stroke={p.up ? C.success : C.orangeAccent} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <div style={{
+          fontFamily: FONT, fontSize: 13, fontWeight: 800,
+          color: p.up ? C.success : C.text,
+          width: 30, textAlign: 'right', letterSpacing: '-0.02em'
+        }}>{p.amr}</div>
+      </div>
+      )}
     </div>
   );
 };
@@ -1012,94 +1080,58 @@ const PointsVisual = () => {
 // =====================================================================
 const KITS = [
   {
-    id: 'hba-home',
-    label: 'Home',
-    club: 'Highbury Athletic',
-    short: 'HBA',
-    body: '#E8181A', bodyDark: '#a30c0e',
-    sleeve: '#FFFFFF', sleeveDark: '#d6d6d6',
-    accent: '#FFFFFF',
-    number: 7, sponsor: 'PRO',
-    value: '£312M', keyPlayer: 'Danny Ashford', rank: 'Rank #5',
-    stats: [
-      { lbl: 'Squad Sync', val: '92%' },
-      { lbl: 'Owned by', val: '64%' }
-    ]
-  },
-  {
-    id: 'hba-away',
-    label: 'Away',
-    club: 'Highbury Athletic',
-    short: 'HBA',
-    body: '#0F172A', bodyDark: '#060a18',
-    sleeve: '#ffc800', sleeveDark: '#c79e00',
-    accent: '#ffc800',
-    number: 7, sponsor: 'PRO',
-    value: '£312M', keyPlayer: 'Danny Ashford', rank: 'Rank #5',
-    stats: [
-      { lbl: 'Squad Sync', val: '88%' },
-      { lbl: 'Owned by', val: '41%' }
-    ]
+    id: 'bue-home',
+    club: 'Business Ends', short: 'BUE',
+    body: '#1a1a2e', bodyDark: '#0d0d1a',
+    sleeve: '#e2b04a', sleeveDark: '#b8882e',
+    accent: '#e2b04a',
+    number: 10, sponsor: 'PRO',
+    keyPlayer: 'Oscar', playerValue: '£7.5M', rank: '#17', amr: '7.8', ownedBy: '100%'
   },
   {
     id: 'anf-home',
-    label: 'Home',
-    club: 'Anfield FC',
-    short: 'ANF',
+    club: 'Anfield FC', short: 'ANF',
     body: '#C8102E', bodyDark: '#7a0a1c',
     sleeve: '#C8102E', sleeveDark: '#7a0a1c',
     accent: '#ffc800',
     number: 11, sponsor: 'PRO',
-    value: '£521M', keyPlayer: 'Marcus Reid', rank: 'Rank #1',
-    stats: [
-      { lbl: 'Squad Sync', val: '95%' },
-      { lbl: 'Owned by', val: '78%' }
-    ]
+    keyPlayer: 'Marcus Reid', playerValue: '£9.2M', rank: '#3', amr: '8.4', ownedBy: '78%'
   },
   {
     id: 'etu-home',
-    label: 'Home',
-    club: 'Etihad United',
-    short: 'ETU',
+    club: 'Etihad United', short: 'ETU',
     body: '#6CABDD', bodyDark: '#3a7eb0',
     sleeve: '#6CABDD', sleeveDark: '#3a7eb0',
     accent: '#FFFFFF',
     number: 9, sponsor: 'PRO',
-    value: '£489M', keyPlayer: 'Luca Ferretti', rank: 'Rank #2',
-    stats: [
-      { lbl: 'Squad Sync', val: '90%' },
-      { lbl: 'Owned by', val: '71%' }
-    ]
+    keyPlayer: 'Jordan Cole', playerValue: '£8.8M', rank: '#1', amr: '8.9', ownedBy: '64%'
+  },
+  {
+    id: 'hba-home',
+    club: 'Highbury Athletic', short: 'HBA',
+    body: '#E8181A', bodyDark: '#a30c0e',
+    sleeve: '#FFFFFF', sleeveDark: '#d6d6d6',
+    accent: '#FFFFFF',
+    number: 7, sponsor: 'PRO',
+    keyPlayer: 'Dele Santos', playerValue: '£7.1M', rank: '#5', amr: '7.5', ownedBy: '52%'
   },
   {
     id: 'stb-home',
-    label: 'Home',
-    club: 'Stamford Blues',
-    short: 'STB',
+    club: 'Stamford Blues', short: 'STB',
     body: '#034694', bodyDark: '#022860',
     sleeve: '#034694', sleeveDark: '#022860',
     accent: '#ffc800',
     number: 20, sponsor: 'PRO',
-    value: '£245M', keyPlayer: 'Javi Moreno', rank: 'Rank #7',
-    stats: [
-      { lbl: 'Squad Sync', val: '86%' },
-      { lbl: 'Owned by', val: '52%' }
-    ]
+    keyPlayer: 'Kai Mensah', playerValue: '£8.0M', rank: '#8', amr: '7.9', ownedBy: '45%'
   },
   {
     id: 'otr-home',
-    label: 'Home',
-    club: 'Old Trafford',
-    short: 'OTR',
+    club: 'Old Trafford', short: 'OTR',
     body: '#DA291C', bodyDark: '#8c1810',
     sleeve: '#000000', sleeveDark: '#0a0a0a',
     accent: '#ffc800',
     number: 10, sponsor: 'PRO',
-    value: '£378M', keyPlayer: 'Callum Voss', rank: 'Rank #3',
-    stats: [
-      { lbl: 'Squad Sync', val: '83%' },
-      { lbl: 'Owned by', val: '46%' }
-    ]
+    keyPlayer: 'Ryan Osei', playerValue: '£6.9M', rank: '#12', amr: '7.2', ownedBy: '38%'
   }
 ];
 
@@ -1445,7 +1477,7 @@ const JerseyShowcase = () => {
 
         {/* Kit info */}
         <div style={{ maxWidth: 720, margin: '32px auto 0', textAlign: 'center' }}>
-          {/* HOME / AWAY badge */}
+          {/* KEY PLAYER badge */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
             <span style={{
               fontFamily: FONT,
@@ -1455,28 +1487,28 @@ const JerseyShowcase = () => {
               color: '#1a0500',
               borderRadius: 6,
               letterSpacing: '0.14em', textTransform: 'uppercase'
-            }}>{kit.label}</span>
+            }}>Key Player</span>
           </div>
 
-          {/* Club name */}
+          {/* Player name */}
           <div style={{
             fontFamily: FONT,
             fontSize: 28, fontWeight: 700,
             color: C.text,
             letterSpacing: '-0.025em',
             marginBottom: 18
-          }}>{kit.club}</div>
+          }}>{kit.keyPlayer}</div>
 
-          {/* Info chips: Club Value · Key Player · League Rank */}
+          {/* Row 1: Player Value · Club Name · League Rank */}
           <div className="kit-chips-row" style={{
             display: 'flex', justifyContent: 'center', gap: 8,
             flexWrap: 'wrap',
-            marginBottom: 18
+            marginBottom: 12
           }}>
             {[
-              { lbl: 'Club Value', val: kit.value },
-              { lbl: 'Key Player', val: kit.keyPlayer },
-              { lbl: 'League', val: kit.rank }
+              { lbl: 'Player Value', val: kit.playerValue },
+              { lbl: 'Club', val: kit.club },
+              { lbl: 'League Rank', val: kit.rank }
             ].map((chip, i) =>
             <div key={i} style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -1501,9 +1533,12 @@ const JerseyShowcase = () => {
             )}
           </div>
 
-          {/* Squad Sync / Owned By cards */}
+          {/* Row 2: AMR · Owned By */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
-            {kit.stats.map((s, i) =>
+            {[
+              { lbl: 'AMR', val: kit.amr, note: 'Avg Match Rating' },
+              { lbl: 'Owned By', val: kit.ownedBy }
+            ].map((s, i) =>
             <div key={i} style={{
               background: C.surf2,
               border: `1px solid ${C.hairline}`,
@@ -1522,6 +1557,7 @@ const JerseyShowcase = () => {
                 fontSize: 18, fontWeight: 700, color: C.text,
                 letterSpacing: '-0.01em'
               }}>{s.val}</div>
+              {s.note && <div style={{ fontFamily: FONT, fontSize: 9, color: C.faint, marginTop: 2 }}>{s.note}</div>}
             </div>
             )}
           </div>
