@@ -1,0 +1,2188 @@
+// =====================================================================
+// FANTASY PRO LEAGUE — Spec-aligned design
+// Palette: #07020f base · brand orange #ff4800 → amber #ffc800
+// Typography: Inter only (varying weight/size for hierarchy)
+// =====================================================================
+
+const C = {
+  bg: '#07020f',
+  bg2: '#0b0614',
+  surf1: '#12071f',
+  surf2: '#120722',
+  surf3: '#180a28',
+  surf4: '#1f0d32',
+  text: '#ffffff',
+  muted: 'rgba(255,255,255,0.62)',
+  faint: 'rgba(255,255,255,0.42)',
+  hairline: 'rgba(255,255,255,0.08)',
+  hairlineSoft: 'rgba(255,255,255,0.04)',
+  orange: '#ff4800',
+  orangeSoft: '#ff7a3d',
+  orangeAccent: '#ff8a4d',
+  amber: '#ffc800',
+  success: '#22c55e',
+  warn: '#f59e0b',
+  danger: '#ef4444',
+  info: '#38bdf8'
+};
+
+const GRAD = {
+  primary: 'linear-gradient(90deg, #ff4800 0%, #ffc800 100%)',
+  diagonal: 'linear-gradient(135deg, #ff4800, #ffc800)',
+  soft: 'linear-gradient(135deg, rgba(255, 72, 0, 0.7), rgba(255, 200, 0, 0.4))'
+};
+
+const BG_GLOWS = {
+  topLeft: 'radial-gradient(ellipse 60% 60% at 0% 0%, rgba(255, 72, 0, 0.07), transparent 60%)',
+  topRight: 'radial-gradient(ellipse 70% 50% at 100% 0%, rgba(255, 200, 0, 0.04), transparent 60%)'
+};
+
+const FONT = "'Inter', system-ui, -apple-system, sans-serif";
+
+// ---------- Shared primitives ----------
+const Pill = ({ children, style = {} }) =>
+<span style={{
+  display: 'inline-flex', alignItems: 'center', gap: 8,
+  padding: '6px 12px',
+  fontFamily: FONT,
+  fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase',
+  color: C.text,
+  background: 'rgba(255, 72, 0, 0.08)',
+  border: '1px solid rgba(255, 72, 0, 0.32)',
+  borderRadius: 999,
+  ...style
+}}>{children}</span>;
+
+
+const Dot = ({ color = C.orange, size = 6, glow = true }) =>
+<span style={{
+  display: 'inline-block', width: size, height: size, borderRadius: '50%',
+  background: color,
+  boxShadow: glow ? `0 0 8px ${color}, 0 0 14px ${color}80` : 'none'
+}} />;
+
+
+const GradientButton = ({ children, size = 'md', icon, onClick, style = {} }) => {
+  const sizes = {
+    sm: { padding: '10px 18px', fontSize: 13 },
+    md: { padding: '14px 24px', fontSize: 14 },
+    lg: { padding: '18px 32px', fontSize: 15 }
+  };
+  return (
+    <button onClick={onClick} style={{
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+      fontFamily: FONT,
+      fontWeight: 600,
+      letterSpacing: '0.01em',
+      borderRadius: 12,
+      cursor: 'pointer',
+      color: '#1a0500',
+      background: GRAD.primary,
+      border: 'none',
+      boxShadow: '0 12px 30px -8px rgba(255, 72, 0, 0.55), 0 0 0 1px rgba(255, 138, 77, 0.4) inset',
+      transition: 'transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease',
+      ...sizes[size],
+      ...style
+    }}
+    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-1px)';e.currentTarget.style.filter = 'brightness(1.05)';e.currentTarget.style.boxShadow = '0 18px 40px -8px rgba(255, 72, 0, 0.7), 0 0 0 1px rgba(255, 200, 0, 0.5) inset';}}
+    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.filter = 'brightness(1)';e.currentTarget.style.boxShadow = '0 12px 30px -8px rgba(255, 72, 0, 0.55), 0 0 0 1px rgba(255, 138, 77, 0.4) inset';}}>
+      
+      {children}
+      {icon}
+    </button>);
+
+};
+
+const GhostButton = ({ children, size = 'md', icon, style = {} }) => {
+  const sizes = {
+    sm: { padding: '10px 18px', fontSize: 13 },
+    md: { padding: '14px 24px', fontSize: 14 },
+    lg: { padding: '18px 32px', fontSize: 15 }
+  };
+  return (
+    <button style={{
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+      fontFamily: FONT,
+      fontWeight: 600,
+      letterSpacing: '0.01em',
+      borderRadius: 12,
+      cursor: 'pointer',
+      color: C.text,
+      background: 'transparent',
+      border: '1px solid rgba(255,255,255,0.16)',
+      transition: 'all 0.2s ease',
+      ...sizes[size],
+      ...style
+    }}
+    onMouseEnter={(e) => {e.currentTarget.style.borderColor = C.orangeAccent;e.currentTarget.style.background = 'rgba(255, 138, 77, 0.06)';}}
+    onMouseLeave={(e) => {e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)';e.currentTarget.style.background = 'transparent';}}>
+      
+      {children}
+      {icon}
+    </button>);
+
+};
+
+const Logo = ({ size = 22 }) =>
+<div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+    <div style={{
+    width: size + 10, height: size + 10,
+    display: 'grid', placeItems: 'center',
+    background: GRAD.diagonal,
+    borderRadius: 9,
+    boxShadow: '0 6px 20px -4px rgba(255, 72, 0, 0.6)'
+  }}>
+      <svg width={size - 2} height={size - 2} viewBox="0 0 24 24" fill="none">
+        <path d="M12 2 L21 6 V12 C21 17 17 20 12 22 C7 20 3 17 3 12 V6 Z" fill="#1a0500" />
+        <path d="M9 11 L11 13 L15 9" stroke="#ffc800" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </div>
+    <div style={{
+    fontFamily: FONT,
+    fontWeight: 800,
+    fontSize: size * 0.78,
+    letterSpacing: '-0.02em',
+    color: C.text,
+    lineHeight: 1
+  }}>
+      FANTASY<span style={{
+      background: GRAD.primary,
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text'
+    }}>PRO</span>
+    </div>
+  </div>;
+
+
+const Eyebrow = ({ children }) =>
+<div style={{
+  display: 'inline-flex', alignItems: 'center', gap: 10,
+  fontFamily: FONT,
+  fontSize: 12, fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase',
+  color: C.orangeAccent
+}}>
+    <Dot color={C.orange} />
+    {children}
+  </div>;
+
+
+const GradientText = ({ children, style = {} }) =>
+<span style={{
+  background: GRAD.primary,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+  ...style
+}}>{children}</span>;
+
+
+// ---------- NAV ----------
+const Nav = () => {
+  const [scrolled, setScrolled] = React.useState(false);
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <nav style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+      padding: '20px 48px',
+      background: scrolled ? 'rgba(7, 2, 15, 0.85)' : 'transparent',
+      backdropFilter: scrolled ? 'blur(16px) saturate(140%)' : 'none',
+      WebkitBackdropFilter: scrolled ? 'blur(16px) saturate(140%)' : 'none',
+      borderBottom: scrolled ? `1px solid ${C.hairline}` : '1px solid transparent',
+      transition: 'all 0.3s'
+    }}>
+      <div style={{
+        maxWidth: 1400, margin: '0 auto',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+      }}>
+        <Logo size={22} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+          {['Why Play FPL', 'Get the App'].map((l) =>
+          <a key={l} href="#" style={{
+            fontFamily: FONT, fontSize: 14, fontWeight: 500,
+            color: C.text, textDecoration: 'none',
+            transition: 'opacity 0.2s',
+            opacity: 0.92
+          }}
+          onMouseEnter={(e) => {e.currentTarget.style.opacity = '1';}}
+          onMouseLeave={(e) => {e.currentTarget.style.opacity = '0.92';}}>
+            {l}</a>
+          )}
+          <GradientButton size="sm">Join Waitlist</GradientButton>
+        </div>
+      </div>
+    </nav>);
+
+};
+
+// =====================================================================
+// HERO — stat-focused visual replaces formation
+// =====================================================================
+const Hero = () =>
+<section style={{
+  position: 'relative',
+  minHeight: '92vh',
+  paddingTop: 140,
+  paddingBottom: 80,
+  overflow: 'hidden',
+  background: C.bg
+}}>
+    {/* Background glows */}
+    <div style={{ position: 'absolute', inset: 0, background: BG_GLOWS.topLeft, pointerEvents: 'none' }} />
+    <div style={{ position: 'absolute', inset: 0, background: BG_GLOWS.topRight, pointerEvents: 'none' }} />
+    {/* Subtle grid */}
+    <div style={{
+    position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.5,
+    backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px)`,
+    backgroundSize: '80px 80px',
+    maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 100%)',
+    WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 100%)'
+  }} />
+
+    <div style={{
+    maxWidth: 1400, margin: '0 auto', padding: '0 48px',
+    position: 'relative',
+    display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 64, alignItems: 'center'
+  }}>
+      {/* LEFT */}
+      <div>
+        <Pill style={{ marginBottom: 28 }}>
+          <Dot color={C.orange} /> Season 26 — Now Open
+        </Pill>
+
+        <h1 style={{
+        fontFamily: FONT,
+        fontSize: 'clamp(48px, 6vw, 84px)',
+        fontWeight: 800,
+        lineHeight: 1.02,
+        letterSpacing: '-0.035em',
+        color: C.text,
+        margin: 0, marginBottom: 28,
+        textWrap: 'balance'
+      }}>
+          Build your squad, earn fantasy points, <GradientText>compete.</GradientText>
+        </h1>
+
+        <p style={{
+        fontFamily: FONT,
+        fontSize: 18, lineHeight: 1.6, fontWeight: 400,
+        color: C.muted,
+        maxWidth: 560,
+        margin: 0, marginBottom: 36
+      }}>
+          Fantasy Pro League brings competitive virtual football into a fantasy format where real club performances, player stats, and weekly results shape the leaderboard.
+        </p>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 56, flexWrap: 'wrap' }}>
+          <GradientButton size="lg" icon={
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+        }>Join the Waitlist</GradientButton>
+          <GhostButton size="lg" icon={
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+        }>Watch Trailer</GhostButton>
+        </div>
+
+        {/* Stats strip */}
+        <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24,
+        paddingTop: 32,
+        borderTop: `1px solid ${C.hairline}`
+      }}>
+          {[
+        { val: '£250K', lbl: 'Prize Pool' },
+        { val: '38', lbl: 'Match Weeks' },
+        { val: '48,212', lbl: 'Managers' }].
+        map((s, i) =>
+        <div key={i}>
+              <div style={{
+            fontFamily: FONT,
+            fontSize: 32, fontWeight: 700,
+            color: C.text,
+            letterSpacing: '-0.025em',
+            lineHeight: 1
+          }}>{s.val}</div>
+              <div style={{
+            fontFamily: FONT,
+            fontSize: 11, color: C.faint,
+            fontWeight: 500,
+            letterSpacing: '0.15em', textTransform: 'uppercase',
+            marginTop: 8
+          }}>{s.lbl}</div>
+            </div>
+        )}
+        </div>
+      </div>
+
+      {/* RIGHT — stat-focused hero visual */}
+      <HeroStatCard />
+    </div>
+  </section>;
+
+
+// Clean stat-focused hero visual
+const HeroStatCard = () => {
+  return (
+    <div style={{ position: 'relative' }}>
+      {/* Soft brand glow behind */}
+      <div style={{
+        position: 'absolute',
+        inset: '-8% -10%',
+        background: GRAD.soft,
+        opacity: 0.35,
+        filter: 'blur(80px)',
+        borderRadius: 32,
+        pointerEvents: 'none'
+      }} />
+
+      {/* Card */}
+      <div style={{
+        position: 'relative',
+        background: `linear-gradient(180deg, ${C.surf3} 0%, ${C.surf1} 100%)`,
+        border: `1px solid ${C.hairline}`,
+        borderRadius: 24,
+        padding: 32,
+        boxShadow: '0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,138,77,0.08), 0 0 80px -30px rgba(255, 72, 0, 0.4)',
+        overflow: 'hidden'
+      }}>
+        {/* Header */}
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          marginBottom: 28
+        }}>
+          <div>
+            <div style={{
+              fontFamily: FONT,
+              fontSize: 11, fontWeight: 600,
+              color: C.faint,
+              letterSpacing: '0.15em', textTransform: 'uppercase',
+              marginBottom: 6
+            }}>Manager · Gameweek 24</div>
+            <div style={{
+              fontFamily: FONT,
+              fontSize: 18, fontWeight: 700,
+              color: C.text,
+              letterSpacing: '-0.01em'
+            }}>MidfieldMaestros</div>
+          </div>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            padding: '6px 11px',
+            background: 'rgba(34, 197, 94, 0.12)',
+            border: '1px solid rgba(34, 197, 94, 0.35)',
+            borderRadius: 8,
+            fontFamily: FONT,
+            fontSize: 11, fontWeight: 600, color: C.success,
+            letterSpacing: '0.08em'
+          }}>
+            <Dot color={C.success} size={5} />
+            LIVE
+          </div>
+        </div>
+
+        {/* Big GW points */}
+        <div style={{
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
+          gap: 24,
+          paddingBottom: 24,
+          borderBottom: `1px solid ${C.hairline}`,
+          marginBottom: 24
+        }}>
+          <div>
+            <div style={{
+              fontFamily: FONT,
+              fontSize: 11, fontWeight: 600,
+              color: C.faint,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              marginBottom: 10
+            }}>GW Points</div>
+            <div style={{
+              fontFamily: FONT,
+              fontSize: 88, fontWeight: 800,
+              lineHeight: 0.9,
+              letterSpacing: '-0.045em',
+              background: GRAD.primary,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>107</div>
+          </div>
+          <div style={{
+            display: 'flex', flexDirection: 'column', gap: 14,
+            paddingBottom: 8
+          }}>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              fontFamily: FONT,
+              fontSize: 13, fontWeight: 600, color: C.success
+            }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <path d="M7 14l5-5 5 5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              +18 vs avg
+            </div>
+            <div style={{
+              fontFamily: FONT,
+              fontSize: 13, color: C.muted
+            }}>
+              Rank <span style={{ color: C.text, fontWeight: 600 }}>12,401</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Mini stats row */}
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10,
+          marginBottom: 24
+        }}>
+          {[
+          { val: '1,842', lbl: 'Total' },
+          { val: '+1.2K', lbl: 'Rank ▲', up: true },
+          { val: '£2.4m', lbl: 'Bank' },
+          { val: '17', lbl: 'GW Avg' }].
+          map((s, i) =>
+          <div key={i} style={{
+            background: C.bg2,
+            border: `1px solid ${C.hairline}`,
+            borderRadius: 10,
+            padding: '10px 12px'
+          }}>
+              <div style={{
+              fontFamily: FONT,
+              fontSize: 9, color: C.faint,
+              fontWeight: 500,
+              letterSpacing: '0.14em', textTransform: 'uppercase',
+              marginBottom: 4
+            }}>{s.lbl}</div>
+              <div style={{
+              fontFamily: FONT,
+              fontSize: 16, fontWeight: 700,
+              color: s.up ? C.success : C.text,
+              letterSpacing: '-0.01em'
+            }}>{s.val}</div>
+            </div>
+          )}
+        </div>
+
+        {/* Top performers list */}
+        <div style={{
+          fontFamily: FONT,
+          fontSize: 11, fontWeight: 600,
+          color: C.faint,
+          letterSpacing: '0.18em', textTransform: 'uppercase',
+          marginBottom: 12
+        }}>Top Performers</div>
+
+        {[
+        { name: 'Bellingham', role: 'CM · Captain', pts: 14, captain: true, deltaPct: 100 },
+        { name: 'Haaland', role: 'ST', pts: 16, deltaPct: 88 },
+        { name: 'Saka', role: 'LW', pts: 12, deltaPct: 70 }].
+        map((p, i) =>
+        <div key={i} style={{
+          display: 'grid', gridTemplateColumns: '1fr auto auto',
+          alignItems: 'center', gap: 14,
+          padding: '12px 0',
+          borderBottom: i < 2 ? `1px solid ${C.hairlineSoft}` : 'none'
+        }}>
+            <div>
+              <div style={{
+              fontFamily: FONT,
+              fontSize: 14, fontWeight: 600, color: C.text,
+              display: 'flex', alignItems: 'center', gap: 8
+            }}>
+                {p.name}
+                {p.captain &&
+              <span style={{
+                fontFamily: FONT,
+                fontSize: 9, fontWeight: 700,
+                padding: '2px 6px',
+                background: GRAD.primary,
+                color: '#1a0500',
+                borderRadius: 4,
+                letterSpacing: '0.08em'
+              }}>C</span>
+              }
+              </div>
+              <div style={{
+              fontFamily: FONT,
+              fontSize: 11, color: C.faint, marginTop: 2
+            }}>{p.role}</div>
+            </div>
+            {/* Sparkline-ish bar */}
+            <div style={{
+            width: 80, height: 4,
+            background: C.bg2,
+            borderRadius: 2,
+            overflow: 'hidden'
+          }}>
+              <div style={{
+              width: `${p.deltaPct}%`, height: '100%',
+              background: GRAD.primary,
+              boxShadow: '0 0 10px rgba(255, 72, 0, 0.5)'
+            }} />
+            </div>
+            <div style={{
+            fontFamily: FONT,
+            fontSize: 18, fontWeight: 700, color: C.text,
+            width: 36, textAlign: 'right',
+            letterSpacing: '-0.01em'
+          }}>{p.pts}</div>
+          </div>
+        )}
+      </div>
+
+      {/* Floating live notification */}
+      <div style={{
+        position: 'absolute',
+        right: -28, top: 50,
+        background: C.surf3,
+        border: '1px solid rgba(255, 138, 77, 0.4)',
+        borderRadius: 12,
+        padding: '12px 14px',
+        display: 'flex', alignItems: 'center', gap: 10,
+        boxShadow: '0 20px 40px -10px rgba(0,0,0,0.6), 0 0 30px rgba(255, 72, 0, 0.18)',
+        animation: 'floatBadge 5s ease-in-out infinite',
+        zIndex: 10
+      }}>
+        <div style={{
+          width: 30, height: 30, borderRadius: 8,
+          background: 'rgba(255, 72, 0, 0.12)',
+          display: 'grid', placeItems: 'center',
+          border: '1px solid rgba(255, 72, 0, 0.4)'
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L15 9 22 10 17 15 18 22 12 19 6 22 7 15 2 10 9 9z" fill={C.amber} />
+          </svg>
+        </div>
+        <div>
+          <div style={{
+            fontFamily: FONT,
+            fontSize: 12, fontWeight: 600, color: C.text
+          }}>Haaland scored!</div>
+          <div style={{
+            fontFamily: FONT,
+            fontSize: 11, color: C.orangeAccent, fontWeight: 500
+          }}>+8 pts · 67'</div>
+        </div>
+      </div>
+    </div>);
+
+};
+
+// =====================================================================
+// FEATURES — "Everything you need to dominate the league"
+// =====================================================================
+const Features = () => {
+  const items = [
+  {
+    n: '01',
+    title: 'Pick Your Squad',
+    desc: 'Draft 15 footballers within a £100m budget. Real Premier League players, real-time prices, weekly transfer windows.',
+    visual: 'squad'
+  },
+  {
+    n: '02',
+    title: 'Create and Join Leagues',
+    desc: 'Spin up private leagues with friends, climb global ladders, or join brand-sponsored cups with cash prize pools.',
+    visual: 'league'
+  },
+  {
+    n: '03',
+    title: 'Earn Fantasy Points',
+    desc: 'Goals, assists, clean sheets, bonus points — every touch counts. Live scoring updates the second they happen.',
+    visual: 'points'
+  }];
+
+
+  return (
+    <section style={{
+      position: 'relative',
+      padding: '140px 48px',
+      background: C.bg,
+      borderTop: `1px solid ${C.hairlineSoft}`
+    }}>
+      <div style={{ position: 'absolute', inset: 0, background: BG_GLOWS.topRight, pointerEvents: 'none' }} />
+
+      <div style={{ maxWidth: 1400, margin: '0 auto', position: 'relative' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64, gap: 40, flexWrap: 'wrap' }}>
+          <div>
+            <Eyebrow>Why Play</Eyebrow>
+            <h2 style={{
+              fontFamily: FONT,
+              fontSize: 'clamp(36px, 4.6vw, 60px)',
+              fontWeight: 800,
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
+              color: C.text,
+              margin: '20px 0 0',
+              maxWidth: 760
+            }}>
+              Everything you need to <GradientText>dominate the league</GradientText>
+            </h2>
+          </div>
+          <div style={{
+            fontFamily: FONT,
+            fontSize: 16,
+            color: C.muted,
+            maxWidth: 380,
+            lineHeight: 1.6
+          }}>
+            Follow virtual pro club performances, outsmart the competition, and climb to the top of every league.
+          </div>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 22
+        }}>
+          {items.map((f, i) => <FeatureCard key={i} {...f} />)}
+        </div>
+      </div>
+    </section>);
+
+};
+
+const FeatureCard = ({ n, title, desc, visual }) => {
+  const [hover, setHover] = React.useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        position: 'relative',
+        background: `linear-gradient(180deg, ${C.surf3} 0%, ${C.surf1} 100%)`,
+        border: `1px solid ${hover ? 'rgba(255, 138, 77, 0.4)' : C.hairline}`,
+        borderRadius: 20,
+        padding: 28,
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
+        boxShadow: hover ?
+        '0 24px 50px -20px rgba(255, 72, 0, 0.35), 0 0 60px -20px rgba(255, 138, 77, 0.3)' :
+        '0 8px 30px -10px rgba(0,0,0,0.5)',
+        transform: hover ? 'translateY(-4px)' : 'translateY(0)',
+        cursor: 'pointer'
+      }}>
+      {/* Glow corner */}
+      <div style={{
+        position: 'absolute',
+        top: -100, right: -100,
+        width: 280, height: 280,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(255, 138, 77, 0.18) 0%, transparent 70%)',
+        opacity: hover ? 1 : 0.5,
+        transition: 'opacity 0.4s',
+        pointerEvents: 'none'
+      }} />
+
+      {/* Number + step label */}
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        marginBottom: 24
+      }}>
+        <div style={{
+          width: 52, height: 52,
+          background: hover ? GRAD.primary : C.bg2,
+          color: hover ? '#1a0500' : C.orangeAccent,
+          border: `1px solid ${hover ? 'transparent' : 'rgba(255, 138, 77, 0.3)'}`,
+          borderRadius: 13,
+          display: 'grid', placeItems: 'center',
+          fontFamily: FONT,
+          fontSize: 18, fontWeight: 700,
+          letterSpacing: '-0.01em',
+          boxShadow: hover ? '0 0 30px rgba(255, 72, 0, 0.55)' : 'none',
+          transition: 'all 0.3s'
+        }}>{n}</div>
+        <div style={{
+          fontFamily: FONT,
+          fontSize: 10, color: C.faint, fontWeight: 500,
+          letterSpacing: '0.16em', textTransform: 'uppercase'
+        }}>STEP · {n}</div>
+      </div>
+
+      {/* Visual */}
+      <div style={{
+        height: 200,
+        background: C.bg,
+        border: `1px solid ${C.hairlineSoft}`,
+        borderRadius: 12,
+        marginBottom: 24,
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {visual === 'squad' && <SquadVisual />}
+        {visual === 'league' && <LeagueVisual />}
+        {visual === 'points' && <PointsVisual />}
+      </div>
+
+      <h3 style={{
+        fontFamily: FONT,
+        fontSize: 22, fontWeight: 700,
+        color: C.text,
+        margin: '0 0 10px',
+        letterSpacing: '-0.02em'
+      }}>{title}</h3>
+
+      <p style={{
+        fontFamily: FONT,
+        fontSize: 14, lineHeight: 1.6,
+        color: C.muted,
+        margin: 0
+      }}>{desc}</p>
+
+      <div style={{
+        marginTop: 20,
+        display: 'flex', alignItems: 'center', gap: 6,
+        fontFamily: FONT,
+        fontSize: 12, fontWeight: 600,
+        color: hover ? C.orangeAccent : C.faint,
+        letterSpacing: '0.06em', textTransform: 'uppercase',
+        transition: 'color 0.3s'
+      }}>
+        Learn more
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style={{
+          transform: hover ? 'translateX(4px)' : 'translateX(0)',
+          transition: 'transform 0.3s'
+        }}>
+          <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+      </div>
+    </div>);
+
+};
+
+const SquadVisual = () =>
+<div style={{ position: 'absolute', inset: 16, display: 'flex', flexDirection: 'column', gap: 6 }}>
+    {[
+  ['ST', 'Haaland', '£14.0m'],
+  ['MID', 'Salah', '£12.5m'],
+  ['DEF', 'Saliba', '£6.0m']].
+  map(([pos, name, price], i) =>
+  <div key={i} style={{
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    background: C.surf1,
+    border: `1px solid ${C.hairlineSoft}`,
+    borderRadius: 8,
+    padding: '8px 10px'
+  }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{
+        width: 28, height: 28, borderRadius: 6,
+        background: 'rgba(255, 138, 77, 0.1)',
+        border: '1px solid rgba(255, 138, 77, 0.3)',
+        display: 'grid', placeItems: 'center',
+        fontFamily: FONT,
+        fontSize: 9, fontWeight: 600, color: C.orangeAccent
+      }}>{pos}</div>
+          <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 600, color: C.text }}>{name}</span>
+        </div>
+        <span style={{ fontFamily: FONT, fontSize: 11, color: C.muted, fontWeight: 500 }}>{price}</span>
+      </div>
+  )}
+    <div style={{
+    marginTop: 4,
+    display: 'flex', justifyContent: 'space-between',
+    fontFamily: FONT,
+    fontSize: 10, color: C.orangeAccent, fontWeight: 600,
+    letterSpacing: '0.1em', textTransform: 'uppercase'
+  }}>
+      <span>Budget</span>
+      <span>£32.5m / £100m</span>
+    </div>
+    <div style={{
+    height: 4, background: C.surf1, borderRadius: 2, overflow: 'hidden'
+  }}>
+      <div style={{
+      width: '32%', height: '100%',
+      background: GRAD.primary,
+      boxShadow: '0 0 8px rgba(255, 72, 0, 0.6)'
+    }} />
+    </div>
+  </div>;
+
+
+const LeagueVisual = () =>
+<div style={{ position: 'absolute', inset: 16 }}>
+    <div style={{
+    fontFamily: FONT,
+    fontSize: 10, color: C.faint, fontWeight: 500,
+    letterSpacing: '0.15em', textTransform: 'uppercase',
+    marginBottom: 8
+  }}>Office Legends · 24 Members</div>
+    {[
+  { rank: 1, name: 'You', pts: 1842, isYou: true },
+  { rank: 2, name: 'Marco', pts: 1791 },
+  { rank: 3, name: 'Priya', pts: 1768 },
+  { rank: 4, name: 'Tomás', pts: 1742 }].
+  map((r, i) =>
+  <div key={i} style={{
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    padding: '7px 10px',
+    background: r.isYou ? 'rgba(255, 138, 77, 0.1)' : 'transparent',
+    border: r.isYou ? '1px solid rgba(255, 138, 77, 0.3)' : '1px solid transparent',
+    borderRadius: 6,
+    marginBottom: 4
+  }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{
+        fontFamily: FONT, fontSize: 13, fontWeight: 700,
+        color: r.rank === 1 ? C.orangeAccent : C.faint,
+        width: 18
+      }}>{r.rank}</span>
+          <span style={{
+        fontFamily: FONT, fontSize: 12, fontWeight: 600,
+        color: r.isYou ? C.orangeAccent : C.text
+      }}>{r.name}</span>
+        </div>
+        <span style={{ fontFamily: FONT, fontSize: 11, color: C.text, fontWeight: 500 }}>{r.pts}</span>
+      </div>
+  )}
+  </div>;
+
+
+const PointsVisual = () => {
+  const events = [
+  { time: "67'", text: 'Goal · Haaland', pts: '+4', c: C.success },
+  { time: "61'", text: 'Assist · Foden', pts: '+3', c: C.success },
+  { time: "44'", text: 'Yellow · Rice', pts: '−1', c: C.danger },
+  { time: "23'", text: 'Clean Sheet · Onana', pts: '+4', c: C.info }];
+
+  return (
+    <div style={{ position: 'absolute', inset: 16 }}>
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        marginBottom: 10
+      }}>
+        <span style={{
+          fontFamily: FONT,
+          fontSize: 10, color: C.success, fontWeight: 600,
+          letterSpacing: '0.15em', textTransform: 'uppercase',
+          display: 'inline-flex', alignItems: 'center', gap: 6
+        }}>
+          <Dot color={C.success} size={5} /> LIVE
+        </span>
+        <span style={{
+          fontFamily: FONT, fontSize: 16, fontWeight: 700,
+          background: GRAD.primary,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text'
+        }}>+10</span>
+      </div>
+      {events.map((e, i) =>
+      <div key={i} style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '5px 0',
+        borderBottom: i < events.length - 1 ? `1px solid ${C.hairlineSoft}` : 'none'
+      }}>
+          <span style={{
+          fontFamily: FONT, fontSize: 10, color: C.faint, fontWeight: 500,
+          width: 28
+        }}>{e.time}</span>
+          <span style={{ fontFamily: FONT, fontSize: 11, color: C.text, flex: 1 }}>{e.text}</span>
+          <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: e.c }}>{e.pts}</span>
+        </div>
+      )}
+    </div>);
+
+};
+
+// =====================================================================
+// JERSEY SHOWCASE — 2 premium 3D jerseys side-by-side
+// =====================================================================
+const KITS = [
+{
+  id: 'hba-home',
+  label: 'Home',
+  club: 'Highbury Athletic',
+  short: 'HBA',
+  body: '#E8181A', bodyDark: '#a30c0e',
+  sleeve: '#FFFFFF', sleeveDark: '#d6d6d6',
+  accent: '#FFFFFF',
+  number: 7, sponsor: 'PRO',
+  stats: [
+  { lbl: 'Squad Sync', val: '92%' },
+  { lbl: 'Owned by', val: '64%' }]
+
+},
+{
+  id: 'hba-away',
+  label: 'Away',
+  club: 'Highbury Athletic',
+  short: 'HBA',
+  body: '#0F172A', bodyDark: '#060a18',
+  sleeve: '#ffc800', sleeveDark: '#c79e00',
+  accent: '#ffc800',
+  number: 7, sponsor: 'PRO',
+  stats: [
+  { lbl: 'Squad Sync', val: '88%' },
+  { lbl: 'Owned by', val: '41%' }]
+
+},
+{
+  id: 'anf-home',
+  label: 'Home',
+  club: 'Anfield FC',
+  short: 'ANF',
+  body: '#C8102E', bodyDark: '#7a0a1c',
+  sleeve: '#C8102E', sleeveDark: '#7a0a1c',
+  accent: '#ffc800',
+  number: 11, sponsor: 'PRO',
+  stats: [
+  { lbl: 'Squad Sync', val: '95%' },
+  { lbl: 'Owned by', val: '78%' }]
+
+},
+{
+  id: 'etu-home',
+  label: 'Home',
+  club: 'Etihad United',
+  short: 'ETU',
+  body: '#6CABDD', bodyDark: '#3a7eb0',
+  sleeve: '#6CABDD', sleeveDark: '#3a7eb0',
+  accent: '#FFFFFF',
+  number: 9, sponsor: 'PRO',
+  stats: [
+  { lbl: 'Squad Sync', val: '90%' },
+  { lbl: 'Owned by', val: '71%' }]
+
+},
+{
+  id: 'stb-home',
+  label: 'Home',
+  club: 'Stamford Blues',
+  short: 'STB',
+  body: '#034694', bodyDark: '#022860',
+  sleeve: '#034694', sleeveDark: '#022860',
+  accent: '#ffc800',
+  number: 20, sponsor: 'PRO',
+  stats: [
+  { lbl: 'Squad Sync', val: '86%' },
+  { lbl: 'Owned by', val: '52%' }]
+
+},
+{
+  id: 'otr-home',
+  label: 'Home',
+  club: 'Old Trafford',
+  short: 'OTR',
+  body: '#DA291C', bodyDark: '#8c1810',
+  sleeve: '#000000', sleeveDark: '#0a0a0a',
+  accent: '#ffc800',
+  number: 10, sponsor: 'PRO',
+  stats: [
+  { lbl: 'Squad Sync', val: '83%' },
+  { lbl: 'Owned by', val: '46%' }]
+
+}];
+
+
+// Premium jersey w/ shading, highlights, gradients
+const PremiumJersey = ({ kit, size = 280, tilt = 0 }) => {
+  const id = kit.id || kit.label;
+  return (
+    <svg width={size} height={size * 1.18} viewBox="0 0 200 240" style={{
+      display: 'block',
+      filter: 'drop-shadow(0 24px 36px rgba(0,0,0,0.5)) drop-shadow(0 60px 60px rgba(255, 72, 0, 0.15))',
+      transform: `rotate(${tilt}deg)`, opacity: "1"
+    }}>
+      <defs>
+        {/* Body — vertical fabric gradient with subtle sheen */}
+        <linearGradient id={`body-${id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={kit.body} stopOpacity="1" />
+          <stop offset="50%" stopColor={kit.body} stopOpacity="1" />
+          <stop offset="100%" stopColor={kit.bodyDark} stopOpacity="1" />
+        </linearGradient>
+        {/* Body — horizontal sheen highlight */}
+        <linearGradient id={`sheen-${id}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0" />
+          <stop offset="35%" stopColor="#fff" stopOpacity="0.18" />
+          <stop offset="50%" stopColor="#fff" stopOpacity="0.26" />
+          <stop offset="65%" stopColor="#fff" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+        </linearGradient>
+        {/* Sleeve gradient */}
+        <linearGradient id={`sleeve-${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={kit.sleeve} stopOpacity="1" />
+          <stop offset="100%" stopColor={kit.sleeveDark} stopOpacity="1" />
+        </linearGradient>
+        {/* Shoulder highlight */}
+        <radialGradient id={`shoulderL-${id}`} cx="0" cy="0" r="1" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id={`shoulderR-${id}`} cx="1" cy="0" r="1" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+        </radialGradient>
+        {/* Bottom shadow */}
+        <linearGradient id={`bottomShade-${id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.35" />
+        </linearGradient>
+        {/* Inside shadow on the body */}
+        <linearGradient id={`innerShade-${id}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#000" stopOpacity="0.35" />
+          <stop offset="20%" stopColor="#000" stopOpacity="0" />
+          <stop offset="80%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.35" />
+        </linearGradient>
+        {/* Subtle fabric texture */}
+        <pattern id={`weave-${id}`} x="0" y="0" width="3" height="3" patternUnits="userSpaceOnUse">
+          <rect width="3" height="3" fill="transparent" />
+          <line x1="0" y1="0" x2="0" y2="3" stroke="#fff" strokeWidth="0.18" opacity="0.05" />
+          <line x1="0" y1="0" x2="3" y2="0" stroke="#000" strokeWidth="0.18" opacity="0.06" />
+        </pattern>
+      </defs>
+
+      {/* SLEEVES (back) */}
+      <g>
+        {/* Left sleeve */}
+        <path
+          d="M 32 52 Q 18 70 12 92 L 32 110 Q 42 96 50 80 Z"
+          fill={`url(#sleeve-${id})`} />
+        
+        {/* Sleeve cuff darker */}
+        <path
+          d="M 12 92 L 32 110 L 27 116 L 8 100 Z"
+          fill={kit.sleeveDark} opacity="0.7" />
+        
+        {/* Right sleeve */}
+        <path
+          d="M 168 52 Q 182 70 188 92 L 168 110 Q 158 96 150 80 Z"
+          fill={`url(#sleeve-${id})`} />
+        
+        <path
+          d="M 188 92 L 168 110 L 173 116 L 192 100 Z"
+          fill={kit.sleeveDark} opacity="0.7" />
+        
+      </g>
+
+      {/* MAIN BODY */}
+      <g>
+        {/* Body silhouette */}
+        <path
+          d="M 50 52
+             L 75 36
+             Q 78 38 82 42
+             Q 100 54 118 42
+             Q 122 38 125 36
+             L 150 52
+             Q 156 60 156 78
+             L 154 220
+             Q 100 232 46 220
+             L 44 78
+             Q 44 60 50 52 Z"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          fill={`url(#body-${id})`} />
+        
+        {/* Weave texture */}
+        <path
+          d="M 50 52
+             L 75 36
+             Q 78 38 82 42
+             Q 100 54 118 42
+             Q 122 38 125 36
+             L 150 52
+             Q 156 60 156 78
+             L 154 220
+             Q 100 232 46 220
+             L 44 78
+             Q 44 60 50 52 Z"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          fill={`url(#weave-${id})`} />
+        
+        {/* Inside shadow on edges */}
+        <path
+          d="M 50 52
+             L 75 36
+             Q 78 38 82 42
+             Q 100 54 118 42
+             Q 122 38 125 36
+             L 150 52
+             Q 156 60 156 78
+             L 154 220
+             Q 100 232 46 220
+             L 44 78
+             Q 44 60 50 52 Z"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          fill={`url(#innerShade-${id})`} />
+        
+
+        {/* Long sheen down body */}
+        <path
+          d="M 60 60 L 140 60 L 144 220 Q 100 230 56 220 Z"
+          fill={`url(#sheen-${id})`}
+          opacity="0.5" />
+        
+
+        {/* Shoulder highlights */}
+        <ellipse cx="62" cy="58" rx="22" ry="10" fill={`url(#shoulderL-${id})`} />
+        <ellipse cx="138" cy="58" rx="22" ry="10" fill={`url(#shoulderR-${id})`} />
+
+        {/* Bottom shadow */}
+        <path
+          d="M 46 180 L 154 180 L 154 220 Q 100 232 46 220 Z"
+          fill={`url(#bottomShade-${id})`} />
+        
+
+        {/* Side seam shadows */}
+        <path d="M 44 78 L 48 78 L 48 220 Q 47 220 46 220 Z" fill="#000" opacity="0.18" />
+        <path d="M 156 78 L 152 78 L 152 220 Q 153 220 154 220 Z" fill="#000" opacity="0.18" />
+
+        {/* Center placket / stitch line */}
+        <line x1="100" y1="56" x2="100" y2="78" stroke="#000" strokeWidth="0.6" opacity="0.25" />
+      </g>
+
+      {/* COLLAR — V-neck */}
+      <g>
+        <path
+          d="M 82 42 Q 100 56 118 42 L 116 48 Q 100 60 84 48 Z"
+          fill={kit.bodyDark} />
+        
+        <path
+          d="M 82 42 Q 100 56 118 42"
+          stroke={kit.accent} strokeWidth="1.3" fill="none" opacity="0.9" />
+        
+        {/* Collar highlight */}
+        <path d="M 84 43 Q 100 54 116 43" stroke="#fff" strokeWidth="0.4" fill="none" opacity="0.4" />
+      </g>
+
+      {/* CLUB CREST — small shield top-left */}
+      <g transform="translate(60 80)">
+        <path d="M 0 -8 L 8 -6 L 8 2 Q 8 8 0 12 Q -8 8 -8 2 L -8 -6 Z"
+        fill={kit.accent} opacity="0.95" />
+        <path d="M 0 -8 L 8 -6 L 8 2 Q 8 8 0 12 Q -8 8 -8 2 L -8 -6 Z"
+        fill="#000" opacity="0.15" />
+        <text x="0" y="3"
+        textAnchor="middle"
+        fontFamily="Inter, sans-serif"
+        fontWeight="800"
+        fontSize="8"
+        fill={kit.body}>{kit.short}</text>
+      </g>
+
+      {/* SPONSOR — chest */}
+      <g>
+        <text x="100" y="105"
+        textAnchor="middle"
+        fontFamily="Inter, sans-serif"
+        fontWeight="800"
+        fontSize="14"
+        letterSpacing="2"
+        fill={kit.accent}
+        opacity="0.92">{kit.sponsor}</text>
+        <text x="100" y="115"
+        textAnchor="middle"
+        fontFamily="Inter, sans-serif"
+        fontWeight="600"
+        fontSize="5"
+        letterSpacing="2"
+        fill={kit.accent}
+        opacity="0.6">FANTASY LEAGUE</text>
+      </g>
+
+      {/* NUMBER on chest/lower body */}
+      <g>
+        <text x="100" y="178"
+        textAnchor="middle"
+        fontFamily="Inter, sans-serif"
+        fontWeight="800"
+        fontSize="58"
+        fill={kit.accent}
+        opacity="0.95"
+        letterSpacing="-2">{kit.number}</text>
+        {/* Number shadow */}
+        <text x="100" y="178"
+        textAnchor="middle"
+        fontFamily="Inter, sans-serif"
+        fontWeight="800"
+        fontSize="58"
+        fill="#000"
+        opacity="0.18"
+        letterSpacing="-2"
+        transform="translate(0 1.5)">{kit.number}</text>
+      </g>
+
+      {/* Final glossy top sheen */}
+      <path
+        d="M 50 52 L 75 36 Q 78 38 82 42 L 80 56 Q 65 58 52 64 Z"
+        fill="#fff" opacity="0.08" />
+      
+    </svg>);
+
+};
+
+// Carousel slot — non-center jerseys (smaller, faded)
+const SideJersey = ({ kit, offset, onClick }) => {
+  const abs = Math.abs(offset);
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        position: 'absolute',
+        left: `calc(50% + ${offset * 220}px)`,
+        top: '50%',
+        transform: `translate(-50%, -50%) scale(${1 - abs * 0.2}) rotateY(${offset * -16}deg)`,
+        opacity: 1 - abs * 0.4,
+        filter: `blur(${abs * 1.5}px)`,
+        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+        cursor: 'pointer',
+        zIndex: 10 - abs,
+        pointerEvents: abs > 1 ? 'none' : 'auto'
+      }}>
+      <PremiumJersey kit={kit} size={210} />
+    </div>);
+
+};
+
+const JerseyShowcase = () => {
+  const [idx, setIdx] = React.useState(0);
+  const kit = KITS[idx];
+  const next = () => setIdx((i) => (i + 1) % KITS.length);
+  const prev = () => setIdx((i) => (i - 1 + KITS.length) % KITS.length);
+
+  return (
+    <section style={{
+      position: 'relative',
+      padding: '140px 48px 160px',
+      background: C.bg2,
+      overflow: 'hidden',
+      borderTop: `1px solid ${C.hairlineSoft}`,
+      borderBottom: `1px solid ${C.hairlineSoft}`
+    }}>
+      {/* Brand glow */}
+      <div style={{
+        position: 'absolute',
+        left: '50%', top: '40%', transform: 'translate(-50%, -50%)',
+        width: 1200, height: 700,
+        background: 'radial-gradient(ellipse at center, rgba(255, 72, 0, 0.12) 0%, rgba(255, 200, 0, 0.05) 40%, transparent 70%)',
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative' }}>
+        <div style={{ textAlign: 'center', marginBottom: 60 }}>
+          <Eyebrow>The Kits</Eyebrow>
+          <h2 style={{
+            fontFamily: FONT,
+            fontSize: 'clamp(36px, 5vw, 64px)',
+            fontWeight: 800,
+            lineHeight: 1.05,
+            letterSpacing: '-0.035em',
+            color: C.text,
+            margin: '20px auto 16px',
+            maxWidth: 760
+          }}>
+            Suit up in the <GradientText>match-day kits</GradientText>
+          </h2>
+          <p style={{
+            fontFamily: FONT,
+            fontSize: 17, color: C.muted,
+            maxWidth: 560, margin: '0 auto', lineHeight: 1.6
+          }}>
+            Premium home and away kits, drafted into your fantasy squad. Every detail, every stat — straight from the live league.
+          </p>
+        </div>
+
+        {/* Carousel stage */}
+        <div style={{ position: 'relative', height: 540 }}>
+          {/* Brand spotlight halo behind centre */}
+          <div style={{
+            position: 'absolute',
+            left: '50%', top: '46%', transform: 'translate(-50%, -50%)',
+            width: 560, height: 560,
+            background: GRAD.soft,
+            opacity: 0.55,
+            filter: 'blur(80px)',
+            borderRadius: '50%',
+            pointerEvents: 'none',
+            transition: 'opacity 0.5s'
+          }} />
+          <div style={{
+            position: 'absolute',
+            left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
+            width: 320, height: 320,
+            background: 'radial-gradient(circle, rgba(255, 138, 77, 0.55) 0%, transparent 70%)',
+            filter: 'blur(50px)',
+            borderRadius: '50%',
+            pointerEvents: 'none'
+          }} />
+
+          {/* Big watermark club mark */}
+          <div style={{
+            position: 'absolute',
+            left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
+            fontFamily: FONT,
+            fontWeight: 900,
+            fontSize: 320,
+            background: GRAD.primary,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            opacity: 0.06,
+            letterSpacing: '-0.05em',
+            lineHeight: 1,
+            pointerEvents: 'none',
+            zIndex: 1
+          }}>{kit.short}</div>
+
+          {/* Floor shadow */}
+          <div style={{
+            position: 'absolute',
+            left: '50%', bottom: 80, transform: 'translateX(-50%)',
+            width: 320, height: 36,
+            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 70%)',
+            filter: 'blur(10px)',
+            pointerEvents: 'none'
+          }} />
+          <div style={{
+            position: 'absolute',
+            left: '50%', bottom: 76, transform: 'translateX(-50%)',
+            width: 240, height: 14,
+            background: GRAD.primary,
+            filter: 'blur(18px)',
+            opacity: 0.6,
+            borderRadius: '50%',
+            pointerEvents: 'none'
+          }} />
+
+          {/* Side jerseys */}
+          {[-2, -1, 1, 2].map((offset) => {
+            const i = (idx + offset + KITS.length) % KITS.length;
+            return (
+              <SideJersey
+                key={offset}
+                kit={KITS[i]}
+                offset={offset}
+                onClick={() => setIdx(i)} />);
+
+
+          })}
+
+          {/* Centre jersey */}
+          <div style={{
+            position: 'absolute',
+            left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 20,
+            animation: 'jerseyFloatleft 5s ease-in-out infinite'
+          }}>
+            <PremiumJersey kit={kit} size={340} />
+          </div>
+
+          {/* Arrows */}
+          <button onClick={prev} style={{
+            position: 'absolute',
+            left: 20, top: '50%', transform: 'translateY(-50%)',
+            width: 56, height: 56,
+            background: C.surf2,
+            border: `1px solid ${C.hairline}`,
+            borderRadius: 14,
+            color: C.text,
+            cursor: 'pointer',
+            display: 'grid', placeItems: 'center',
+            transition: 'all 0.2s',
+            zIndex: 30
+          }}
+          onMouseEnter={(e) => {e.currentTarget.style.borderColor = C.orangeAccent;e.currentTarget.style.boxShadow = '0 0 24px rgba(255, 72, 0, 0.4)';}}
+          onMouseLeave={(e) => {e.currentTarget.style.borderColor = C.hairline;e.currentTarget.style.boxShadow = 'none';}}>
+            
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button onClick={next} style={{
+            position: 'absolute',
+            right: 20, top: '50%', transform: 'translateY(-50%)',
+            width: 56, height: 56,
+            background: C.surf2,
+            border: `1px solid ${C.hairline}`,
+            borderRadius: 14,
+            color: C.text,
+            cursor: 'pointer',
+            display: 'grid', placeItems: 'center',
+            transition: 'all 0.2s',
+            zIndex: 30
+          }}
+          onMouseEnter={(e) => {e.currentTarget.style.borderColor = C.orangeAccent;e.currentTarget.style.boxShadow = '0 0 24px rgba(255, 72, 0, 0.4)';}}
+          onMouseLeave={(e) => {e.currentTarget.style.borderColor = C.hairline;e.currentTarget.style.boxShadow = 'none';}}>
+            
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Info: club name, kit type, stat row */}
+        <div style={{
+          maxWidth: 720, margin: '32px auto 0',
+          textAlign: 'center'
+        }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 10,
+            marginBottom: 14
+          }}>
+            <span style={{
+              fontFamily: FONT,
+              fontSize: 11, fontWeight: 700,
+              padding: '5px 12px',
+              background: GRAD.primary,
+              color: '#1a0500',
+              borderRadius: 6,
+              letterSpacing: '0.14em', textTransform: 'uppercase'
+            }}>{kit.label}</span>
+          </div>
+          <div style={{
+            fontFamily: FONT,
+            fontSize: 28, fontWeight: 700,
+            color: C.text,
+            letterSpacing: '-0.025em',
+            marginBottom: 22
+          }}>{kit.club}</div>
+
+          {/* Stat row */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: 12
+          }}>
+            {kit.stats.map((s, i) =>
+            <div key={i} style={{
+              background: C.surf2,
+              border: `1px solid ${C.hairline}`,
+              borderRadius: 10,
+              padding: '10px 18px',
+              minWidth: 130
+            }}>
+                <div style={{
+                fontFamily: FONT,
+                fontSize: 10, color: C.faint, fontWeight: 500,
+                letterSpacing: '0.14em', textTransform: 'uppercase',
+                marginBottom: 4
+              }}>{s.lbl}</div>
+                <div style={{
+                fontFamily: FONT,
+                fontSize: 18, fontWeight: 700, color: C.text,
+                letterSpacing: '-0.01em'
+              }}>{s.val}</div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Pagination dots */}
+        <div style={{
+          display: 'flex', justifyContent: 'center', gap: 8,
+          marginTop: 28
+        }}>
+          {KITS.map((_, i) =>
+          <button key={i} onClick={() => setIdx(i)} style={{
+            width: i === idx ? 28 : 8, height: 8,
+            borderRadius: 4,
+            background: i === idx ? 'transparent' : 'rgba(255,255,255,0.18)',
+            backgroundImage: i === idx ? GRAD.primary : 'none',
+            boxShadow: i === idx ? '0 0 12px rgba(255, 72, 0, 0.6)' : 'none',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'all 0.3s',
+            padding: 0
+          }} />
+          )}
+        </div>
+
+        {/* CTA */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
+          <GradientButton size="lg" icon={
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          }>Claim Your Kit</GradientButton>
+        </div>
+      </div>
+    </section>);
+
+};
+
+// =====================================================================
+// WAITLIST
+// =====================================================================
+const Waitlist = () => {
+  const [email, setEmail] = React.useState('');
+  const [focused, setFocused] = React.useState(false);
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const submit = (e) => {
+    e.preventDefault();
+    if (email.includes('@')) setSubmitted(true);
+  };
+
+  return (
+    <section style={{
+      position: 'relative',
+      padding: '120px 48px',
+      background: C.bg
+    }}>
+      <div style={{ position: 'absolute', inset: 0, background: BG_GLOWS.topLeft, pointerEvents: 'none' }} />
+
+      <div style={{ maxWidth: 920, margin: '0 auto', position: 'relative' }}>
+        <div style={{
+          position: 'relative',
+          background: `linear-gradient(180deg, ${C.surf3} 0%, ${C.surf1} 100%)`,
+          border: '1px solid rgba(255, 138, 77, 0.32)',
+          borderRadius: 24,
+          padding: '64px 56px',
+          textAlign: 'center',
+          boxShadow: '0 0 0 1px rgba(255, 138, 77, 0.1) inset, 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 100px -20px rgba(255, 72, 0, 0.35)',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute', top: -120, left: -120,
+            width: 320, height: 320, borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(255, 72, 0, 0.18) 0%, transparent 70%)'
+          }} />
+          <div style={{
+            position: 'absolute', bottom: -120, right: -120,
+            width: 320, height: 320, borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(255, 200, 0, 0.12) 0%, transparent 70%)'
+          }} />
+
+          <div style={{ position: 'relative' }}>
+            <Eyebrow>Limited Spots</Eyebrow>
+            <h2 style={{
+              fontFamily: FONT,
+              fontSize: 'clamp(36px, 4.5vw, 56px)',
+              fontWeight: 800,
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
+              color: C.text,
+              margin: '20px auto 16px',
+              maxWidth: 700
+            }}>
+              Join the <GradientText>FPL Waitlist</GradientText>
+            </h2>
+            <p style={{
+              fontFamily: FONT,
+              fontSize: 16, color: C.muted,
+              maxWidth: 480, margin: '0 auto 36px', lineHeight: 1.6
+            }}>
+              Be first. No spam. Just launch news, beta invites, and an exclusive founder badge for your manager profile.
+            </p>
+
+            {!submitted ?
+            <form onSubmit={submit} style={{
+              display: 'flex', gap: 12, maxWidth: 520, margin: '0 auto'
+            }}>
+                <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setFocused(false)}
+                placeholder="you@email.com"
+                style={{
+                  flex: 1,
+                  padding: '16px 20px',
+                  fontFamily: FONT,
+                  fontSize: 15,
+                  background: C.bg,
+                  border: `1px solid ${focused ? C.orangeAccent : C.hairline}`,
+                  borderRadius: 12,
+                  color: C.text,
+                  outline: 'none',
+                  boxShadow: focused ? '0 0 0 3px rgba(255, 138, 77, 0.18), 0 0 24px rgba(255, 72, 0, 0.25)' : 'none',
+                  transition: 'all 0.2s'
+                }} />
+              
+                <GradientButton size="lg">Join Waitlist</GradientButton>
+              </form> :
+
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 12,
+              padding: '16px 28px',
+              background: 'rgba(34, 197, 94, 0.12)',
+              border: `1px solid ${C.success}`,
+              borderRadius: 12,
+              fontFamily: FONT,
+              fontSize: 15, fontWeight: 600, color: C.success
+            }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                You're on the list. Welcome, manager.
+              </div>
+            }
+
+            <div style={{
+              display: 'flex', justifyContent: 'center', gap: 24,
+              marginTop: 32,
+              fontFamily: FONT,
+              fontSize: 11, color: C.faint, fontWeight: 500,
+              letterSpacing: '0.12em', textTransform: 'uppercase'
+            }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Dot color={C.orange} size={5} /> 12,408 Joined</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Dot color={C.amber} size={5} glow={false} /> Beta Aug 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>);
+
+};
+
+// =====================================================================
+// APP SECTION — "Play on the go, anytime, anywhere"
+// =====================================================================
+const GetTheApp = () =>
+<section style={{
+  position: 'relative',
+  padding: '120px 48px',
+  background: C.bg2,
+  borderTop: `1px solid ${C.hairlineSoft}`,
+  overflow: 'hidden'
+}}>
+    <div style={{ position: 'absolute', inset: 0, background: BG_GLOWS.topRight, pointerEvents: 'none' }} />
+
+    <div style={{
+    maxWidth: 1400, margin: '0 auto',
+    display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center',
+    position: 'relative'
+  }}>
+      <div>
+        <Eyebrow>Mobile App</Eyebrow>
+        <h2 style={{
+        fontFamily: FONT,
+        fontSize: 'clamp(36px, 4.6vw, 60px)',
+        fontWeight: 800,
+        lineHeight: 1.05,
+        letterSpacing: '-0.03em',
+        color: C.text,
+        margin: '20px 0 24px'
+      }}>
+          Play on the go, <GradientText>anytime, anywhere</GradientText>
+        </h2>
+        <p style={{
+        fontFamily: FONT,
+        fontSize: 17, color: C.muted,
+        maxWidth: 460, margin: '0 0 36px', lineHeight: 1.6
+      }}>
+          Push notifications the second your captain scores. One-tap transfers. Match-day chat with your league. Built for the 90+5.
+        </p>
+
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+          <StoreButton store="apple" />
+          <StoreButton store="google" />
+        </div>
+
+        <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: 16, marginTop: 48
+      }}>
+          {[
+        ['Live Push', 'Goal alerts & lineups'],
+        ['Quick Sub', 'Bench in one tap'],
+        ['League Chat', 'Trash-talk built in'],
+        ['Offline Mode', 'See your team anywhere']].
+        map(([t, d], i) =>
+        <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+              <div style={{
+            width: 6, height: 6, borderRadius: '50%',
+            background: C.orangeAccent,
+            boxShadow: '0 0 10px rgba(255, 138, 77, 0.6)',
+            marginTop: 8
+          }} />
+              <div>
+                <div style={{
+              fontFamily: FONT,
+              fontSize: 14, fontWeight: 700, color: C.text
+            }}>{t}</div>
+                <div style={{
+              fontFamily: FONT,
+              fontSize: 13, color: C.muted, marginTop: 2
+            }}>{d}</div>
+              </div>
+            </div>
+        )}
+        </div>
+      </div>
+
+      <div style={{ position: 'relative', height: 600, perspective: 1400 }}>
+        <div style={{
+        position: 'absolute',
+        left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
+        width: 500, height: 500,
+        background: GRAD.soft,
+        opacity: 0.4, filter: 'blur(80px)',
+        pointerEvents: 'none'
+      }} />
+        <PhoneMockup variant="home" style={{ position: 'absolute', left: '5%', top: '5%', '--rot': '-8deg', transform: 'rotate(-8deg)', animation: 'floatPhone 7s ease-in-out infinite' }} />
+        <PhoneMockup variant="match" style={{ position: 'absolute', right: '5%', top: '15%', '--rot': '6deg', transform: 'rotate(6deg)', animation: 'floatPhone 7s 1.5s ease-in-out infinite', zIndex: 2 }} />
+      </div>
+    </div>
+  </section>;
+
+
+const StoreButton = ({ store }) =>
+<button style={{
+  display: 'inline-flex', alignItems: 'center', gap: 12,
+  padding: '14px 22px',
+  background: C.surf2,
+  border: '1px solid rgba(255, 138, 77, 0.3)',
+  borderRadius: 999,
+  color: C.text,
+  cursor: 'pointer',
+  transition: 'all 0.2s',
+  fontFamily: FONT
+}}
+onMouseEnter={(e) => {e.currentTarget.style.borderColor = C.orangeAccent;e.currentTarget.style.boxShadow = '0 0 24px rgba(255, 72, 0, 0.3)';}}
+onMouseLeave={(e) => {e.currentTarget.style.borderColor = 'rgba(255, 138, 77, 0.3)';e.currentTarget.style.boxShadow = 'none';}}>
+  
+    {store === 'apple' ?
+  <svg width="20" height="20" viewBox="0 0 24 24" fill={C.orangeAccent}>
+        <path d="M17.05 12.04c-.03-3.13 2.55-4.63 2.67-4.71-1.46-2.13-3.73-2.43-4.54-2.46-1.93-.2-3.77 1.14-4.75 1.14-.99 0-2.49-1.11-4.1-1.08-2.11.03-4.06 1.23-5.14 3.12-2.2 3.81-.56 9.45 1.58 12.55 1.05 1.51 2.29 3.21 3.91 3.15 1.58-.06 2.18-1.02 4.09-1.02 1.91 0 2.45 1.02 4.12.99 1.7-.03 2.78-1.54 3.81-3.06 1.21-1.75 1.71-3.46 1.74-3.55-.04-.02-3.34-1.28-3.39-5.07zM14.04 3.7c.86-1.05 1.45-2.51 1.29-3.96-1.24.05-2.78.83-3.68 1.87-.8.92-1.5 2.41-1.31 3.83 1.39.11 2.81-.7 3.7-1.74z" />
+      </svg> :
+
+  <svg width="20" height="20" viewBox="0 0 24 24" fill={C.orangeAccent}>
+        <path d="M3.6 1.5c-.4.4-.6.9-.6 1.6v17.8c0 .7.2 1.2.6 1.6L13.4 12 3.6 1.5zM14.5 13l2.6 2.6-11 6.3c-.3.2-.6.2-.9.1L14.5 13zM18.7 8.6l-3.6 2.1-2.6-2.6 2.6-2.6 3.6 2.1c1 .6 1 1.6 0 2.2l-.1.1zM5.2 1.4c.3-.1.6-.1.9.1l11 6.3-2.6 2.6L5.2 1.4z" />
+      </svg>
+  }
+    <div style={{ textAlign: 'left' }}>
+      <div style={{
+      fontSize: 10, color: C.faint, fontWeight: 500,
+      letterSpacing: '0.1em', textTransform: 'uppercase',
+      fontFamily: FONT
+    }}>{store === 'apple' ? 'Download on the' : 'Get it on'}</div>
+      <div style={{
+      fontSize: 14, fontWeight: 700, color: C.text,
+      fontFamily: FONT,
+      marginTop: 1
+    }}>{store === 'apple' ? 'App Store' : 'Google Play'}</div>
+    </div>
+  </button>;
+
+
+const PhoneMockup = ({ variant, style }) =>
+<div style={{
+  width: 280, height: 580,
+  background: C.bg,
+  border: '8px solid #1a1525',
+  borderRadius: 44,
+  boxShadow: '0 40px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255, 138, 77, 0.18), 0 0 60px -20px rgba(255, 72, 0, 0.4)',
+  overflow: 'hidden',
+  position: 'relative',
+  ...style
+}}>
+    <div style={{
+    position: 'absolute', top: 8, left: '50%', transform: 'translateX(-50%)',
+    width: 90, height: 24, background: '#000', borderRadius: 16, zIndex: 10
+  }} />
+    {variant === 'home' ? <PhoneHome /> : <PhoneMatch />}
+  </div>;
+
+
+const PhoneHome = () =>
+<div style={{ padding: '46px 16px 16px', height: '100%', background: C.bg }}>
+    <div style={{
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    padding: '8px 4px'
+  }}>
+      <div style={{
+      fontFamily: FONT,
+      fontSize: 16, fontWeight: 800, color: C.text
+    }}>FANTASY<span style={{
+        background: GRAD.primary,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text'
+      }}>PRO</span></div>
+      <div style={{
+      width: 28, height: 28, borderRadius: '50%',
+      background: GRAD.diagonal
+    }} />
+    </div>
+
+    <div style={{
+    marginTop: 14,
+    background: `linear-gradient(180deg, ${C.surf3} 0%, ${C.surf1} 100%)`,
+    border: '1px solid rgba(255, 138, 77, 0.3)',
+    borderRadius: 14, padding: 14
+  }}>
+      <div style={{
+      fontFamily: FONT,
+      fontSize: 9, color: C.success, fontWeight: 600,
+      letterSpacing: '0.15em', textTransform: 'uppercase',
+      marginBottom: 6,
+      display: 'inline-flex', alignItems: 'center', gap: 5
+    }}><Dot color={C.success} size={5} /> Live · GW 24</div>
+      <div style={{
+      fontFamily: FONT,
+      fontSize: 36, fontWeight: 800, color: C.text,
+      letterSpacing: '-0.03em', lineHeight: 1
+    }}>+87 <span style={{
+        fontSize: 14,
+        background: GRAD.primary,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text'
+      }}>pts</span></div>
+      <div style={{
+      fontFamily: FONT,
+      fontSize: 11, color: C.muted, marginTop: 4
+    }}>Rank up 1,204 places</div>
+      <div style={{
+      marginTop: 12, height: 6, background: C.bg, borderRadius: 3,
+      overflow: 'hidden'
+    }}>
+        <div style={{
+        width: '78%', height: '100%',
+        background: GRAD.primary,
+        boxShadow: '0 0 8px rgba(255, 72, 0, 0.6)'
+      }} />
+      </div>
+    </div>
+
+    <div style={{
+    marginTop: 12,
+    fontFamily: FONT,
+    fontSize: 9, color: C.faint, fontWeight: 600,
+    letterSpacing: '0.15em', textTransform: 'uppercase'
+  }}>Your XI</div>
+
+    {[
+  { name: 'Haaland', pos: 'ST', pts: 16, c: true },
+  { name: 'Salah', pos: 'RW', pts: 10 },
+  { name: 'Saka', pos: 'LW', pts: 12 },
+  { name: 'Bellingham', pos: 'CM', pts: 9 }].
+  map((p, i) =>
+  <div key={i} style={{
+    marginTop: 8,
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    background: C.surf1,
+    border: `1px solid ${C.hairlineSoft}`,
+    borderRadius: 10, padding: '8px 10px'
+  }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{
+        width: 24, height: 24, borderRadius: 6,
+        background: p.c ? GRAD.primary : C.bg,
+        border: p.c ? 'none' : `1px solid ${C.hairline}`,
+        display: 'grid', placeItems: 'center',
+        fontFamily: FONT,
+        fontSize: 8, fontWeight: 700,
+        color: p.c ? '#1a0500' : C.faint
+      }}>{p.pos}</div>
+          <span style={{
+        fontFamily: FONT,
+        fontSize: 12, fontWeight: 600, color: C.text
+      }}>{p.name}</span>
+          {p.c && <span style={{
+        fontFamily: FONT,
+        fontSize: 10, fontWeight: 700, color: C.orangeAccent
+      }}>(C)</span>}
+        </div>
+        <span style={{
+      fontFamily: FONT,
+      fontSize: 14, fontWeight: 800, color: C.text
+    }}>{p.pts}</span>
+      </div>
+  )}
+  </div>;
+
+
+const PhoneMatch = () =>
+<div style={{ padding: '46px 0 0', height: '100%', background: C.bg }}>
+    <div style={{
+    padding: '12px 16px',
+    borderBottom: `1px solid ${C.hairlineSoft}`,
+    display: 'flex', alignItems: 'center', gap: 10
+  }}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18l-6-6 6-6" stroke={C.faint} strokeWidth="2.5" strokeLinecap="round" />
+      </svg>
+      <span style={{
+      fontFamily: FONT,
+      fontSize: 10, color: C.faint, fontWeight: 600,
+      letterSpacing: '0.15em', textTransform: 'uppercase'
+    }}>Match Center</span>
+    </div>
+
+    <div style={{
+    padding: '20px 16px',
+    background: 'linear-gradient(180deg, rgba(255, 72, 0, 0.12) 0%, transparent 100%)'
+  }}>
+      <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+        <div style={{ textAlign: 'center', flex: 1 }}>
+          <div style={{
+          width: 44, height: 44, borderRadius: 10,
+          background: '#6CABDD', margin: '0 auto 8px'
+        }} />
+          <div style={{
+          fontFamily: FONT,
+          fontSize: 12, fontWeight: 700, color: C.text
+        }}>ETU</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+          fontFamily: FONT,
+          fontSize: 9, color: C.success, fontWeight: 600,
+          letterSpacing: '0.15em', textTransform: 'uppercase',
+          display: 'inline-flex', alignItems: 'center', gap: 5
+        }}><Dot color={C.success} size={4} /> 67' Live</div>
+          <div style={{
+          fontFamily: FONT,
+          fontSize: 32, fontWeight: 800, color: C.text,
+          margin: '4px 0', letterSpacing: '-0.03em'
+        }}>2 — 1</div>
+        </div>
+        <div style={{ textAlign: 'center', flex: 1 }}>
+          <div style={{
+          width: 44, height: 44, borderRadius: 10,
+          background: '#C8102E', margin: '0 auto 8px'
+        }} />
+          <div style={{
+          fontFamily: FONT,
+          fontSize: 12, fontWeight: 700, color: C.text
+        }}>ANF</div>
+        </div>
+      </div>
+    </div>
+
+    <div style={{ padding: 16 }}>
+      <div style={{
+      fontFamily: FONT,
+      fontSize: 9, color: C.faint, fontWeight: 600,
+      letterSpacing: '0.15em', textTransform: 'uppercase',
+      marginBottom: 10
+    }}>Your Players</div>
+      {[
+    { name: 'Haaland', ev: 'Goal · 67\'', pts: '+8', new: true },
+    { name: 'Salah', ev: '4 shots', pts: '+2' },
+    { name: 'Foden', ev: 'Assist · 23\'', pts: '+3' }].
+    map((e, i) =>
+    <div key={i} style={{
+      marginBottom: 8,
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      background: e.new ? 'rgba(255, 72, 0, 0.1)' : C.surf1,
+      border: e.new ? '1px solid rgba(255, 138, 77, 0.4)' : `1px solid ${C.hairlineSoft}`,
+      borderRadius: 10, padding: '10px 12px'
+    }}>
+          <div>
+            <div style={{
+          fontFamily: FONT,
+          fontSize: 12, fontWeight: 600, color: C.text
+        }}>{e.name}</div>
+            <div style={{
+          fontFamily: FONT,
+          fontSize: 10, color: e.new ? C.orangeAccent : C.faint,
+          fontWeight: 500, marginTop: 2
+        }}>{e.ev}</div>
+          </div>
+          <span style={{
+        fontFamily: FONT,
+        fontSize: 14, fontWeight: 800,
+        color: e.new ? C.orangeAccent : C.text
+      }}>{e.pts}</span>
+        </div>
+    )}
+    </div>
+  </div>;
+
+
+// =====================================================================
+// FOOTER
+// =====================================================================
+const Footer = () =>
+<footer style={{
+  position: 'relative',
+  padding: '80px 48px 40px',
+  background: C.bg2,
+  borderTop: `1px solid ${C.hairlineSoft}`
+}}>
+    <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+      <div style={{
+      display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
+      gap: 60, marginBottom: 60
+    }}>
+        <div>
+          <Logo size={26} />
+          <p style={{
+          fontFamily: FONT,
+          fontSize: 14, color: C.muted,
+          maxWidth: 320, marginTop: 20, lineHeight: 1.6
+        }}>
+            The fantasy league built for managers who play to win. Independent, ad-free, designed for match-day.
+          </p>
+          <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
+            {['x', 'discord', 'instagram', 'tiktok'].map((s) =>
+          <a key={s} href="#" style={{
+            width: 38, height: 38,
+            background: C.surf2,
+            border: `1px solid ${C.hairline}`,
+            borderRadius: 10,
+            display: 'grid', placeItems: 'center',
+            color: C.muted,
+            transition: 'all 0.2s',
+            textDecoration: 'none'
+          }}
+          onMouseEnter={(e) => {e.currentTarget.style.borderColor = C.orangeAccent;e.currentTarget.style.color = C.orangeAccent;}}
+          onMouseLeave={(e) => {e.currentTarget.style.borderColor = C.hairline;e.currentTarget.style.color = C.muted;}}>
+            
+                <SocialIcon name={s} />
+              </a>
+          )}
+          </div>
+        </div>
+
+        {[
+      { title: 'Game', links: ['Squad Builder', 'Live Scores', 'Leaderboards', 'Cups & Prizes', 'Rules'] },
+      { title: 'Community', links: ['League Hub', 'Discord', 'Manager Tips', 'Match Threads', 'Forum'] },
+      { title: 'Info', links: ['About', 'Press Kit', 'Careers', 'Privacy', 'Terms'] }].
+      map((col) =>
+      <div key={col.title}>
+            <div style={{
+          fontFamily: FONT,
+          fontSize: 11, fontWeight: 600,
+          color: C.orangeAccent,
+          letterSpacing: '0.18em', textTransform: 'uppercase',
+          marginBottom: 18
+        }}>{col.title}</div>
+            {col.links.map((l) =>
+        <a key={l} href="#" style={{
+          display: 'block',
+          fontFamily: FONT,
+          fontSize: 14, color: C.muted,
+          textDecoration: 'none',
+          padding: '6px 0',
+          transition: 'color 0.2s'
+        }}
+        onMouseEnter={(e) => {e.currentTarget.style.color = C.text;}}
+        onMouseLeave={(e) => {e.currentTarget.style.color = C.muted;}}>
+          {l}</a>
+        )}
+          </div>
+      )}
+      </div>
+
+      <div style={{
+      paddingTop: 28,
+      borderTop: `1px solid ${C.hairlineSoft}`,
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      flexWrap: 'wrap', gap: 20
+    }}>
+        <div style={{
+        fontFamily: FONT,
+        fontSize: 11, color: C.faint, fontWeight: 500,
+        letterSpacing: '0.1em'
+      }}>
+          © 2026 FANTASYPRO LEAGUE · ALL RIGHTS RESERVED
+        </div>
+        <div style={{
+        display: 'flex', gap: 6, alignItems: 'center',
+        fontFamily: FONT,
+        fontSize: 11, color: C.faint, fontWeight: 500,
+        letterSpacing: '0.1em', textTransform: 'uppercase'
+      }}>
+          <Dot color={C.success} size={5} />
+          <span>Server Status · Operational</span>
+        </div>
+      </div>
+    </div>
+  </footer>;
+
+
+const SocialIcon = ({ name }) => {
+  const paths = {
+    x: <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />,
+    discord: <path d="M19 5c-2-1-3.5-1-3.5-1l-.2.5c1.5.4 2.4 1 2.4 1-3-1.5-7.4-1.5-10.4 0 0 0 .9-.6 2.4-1l-.2-.5S8 4 6 5C5 6 4 9 4 12c2 2.5 4.5 2.5 4.5 2.5l.7-1c-1.2-.4-2-1-2-1 1.5 1 4 1.5 6.8 1.5 2.8 0 5.3-.5 6.8-1.5 0 0-.8.6-2 1l.7 1S22 14.5 24 12c0-3-1-6-2-7zM9 12c-.7 0-1.3-.7-1.3-1.5S8.3 9 9 9s1.3.7 1.3 1.5S9.7 12 9 12zm6 0c-.7 0-1.3-.7-1.3-1.5S14.3 9 15 9s1.3.7 1.3 1.5S15.7 12 15 12z" fill="currentColor" />,
+    instagram: <><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.6" fill="none" /><circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.6" fill="none" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" /></>,
+    tiktok: <path d="M16 4v9.5a3.5 3.5 0 11-3.5-3.5h.5V7a6.5 6.5 0 106.5 6.5V8.5c1 .8 2.3 1.3 3.5 1.3V7c-1.5 0-3-.5-4-1.5-.7-.5-1-1-1-1.5h-2z" fill="currentColor" />
+  };
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none">{paths[name]}</svg>;
+};
+
+// =====================================================================
+// APP
+// =====================================================================
+const App = () =>
+<div style={{
+  background: C.bg,
+  color: C.text,
+  minHeight: '100vh',
+  overflowX: 'hidden'
+}}>
+    <Nav />
+    <Hero />
+    <Features />
+    <JerseyShowcase />
+    <Waitlist />
+    <GetTheApp />
+    <Footer />
+  </div>;
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
