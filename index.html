@@ -62,28 +62,42 @@
     .nav-links { display: none !important; }
     .nav-ham { display: flex !important; }
 
+    /* Hero */
+    .hero-section { padding-top: 96px !important; padding-bottom: 60px !important; min-height: auto !important; }
     .hero-inner { padding-left: 0 !important; padding-right: 0 !important; grid-template-columns: 1fr !important; gap: 40px !important; }
     .hero-stat-wrap { display: none !important; }
+    .hero-buttons { flex-direction: column !important; align-items: stretch !important; }
+    .hero-buttons > button { width: 100% !important; justify-content: center !important; }
     .stats-strip { gap: 16px !important; }
+    .stats-val { font-size: 24px !important; }
 
+    /* Features */
     .features-cards { grid-template-columns: 1fr !important; }
     .features-header { flex-direction: column !important; align-items: flex-start !important; gap: 20px !important; margin-bottom: 40px !important; }
 
+    /* Jersey */
     .carousel-stage { height: 380px !important; }
     .side-jersey-item { display: none !important; }
     .kit-chips-row { flex-direction: column !important; align-items: center !important; }
 
+    /* Waitlist */
     .waitlist-card { padding: 40px 24px !important; }
     .waitlist-form-row { flex-direction: column !important; }
     .waitlist-form-row input { width: 100% !important; box-sizing: border-box !important; }
     .waitlist-form-row button { width: 100% !important; }
 
+    /* App */
     .app-layout { grid-template-columns: 1fr !important; }
     .phone-showcase { display: none !important; }
+    .store-buttons { flex-direction: column !important; align-items: stretch !important; }
+    .store-buttons > button { width: 100% !important; justify-content: center !important; }
 
+    /* Footer */
     .footer-cols { grid-template-columns: 1fr !important; gap: 32px !important; }
 
+    /* General */
     input { font-size: 16px !important; }
+    button, a { min-height: 44px; }
   }
 </style>
 </head>
@@ -297,7 +311,7 @@ const Nav = () => {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center'
       }}>
         <Logo size={22} />
-        {/* Desktop links */}
+        {/* Desktop text links — hidden on mobile */}
         <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
           {['Why Play FPL', 'Get the App'].map((l) =>
           <a key={l} href="#" style={{
@@ -310,21 +324,23 @@ const Nav = () => {
             {l}
           </a>
           )}
-          <GradientButton size="sm">Join Waitlist</GradientButton>
         </div>
-        {/* Hamburger — shown on mobile via CSS */}
-        <button
-          className="nav-ham"
-          onClick={() => setMenuOpen((o) => !o)}
-          style={{
-            display: 'none', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-            gap: 5, width: 44, height: 44,
-            background: 'transparent', border: 'none', cursor: 'pointer', padding: 0
-          }}>
-          <span style={{ width: 22, height: 2, background: C.text, borderRadius: 2, display: 'block', transition: 'all 0.3s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
-          <span style={{ width: 22, height: 2, background: C.text, borderRadius: 2, display: 'block', transition: 'all 0.3s', opacity: menuOpen ? 0 : 1 }} />
-          <span style={{ width: 22, height: 2, background: C.text, borderRadius: 2, display: 'block', transition: 'all 0.3s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
-        </button>
+        {/* Right group: CTA always visible, hamburger shown on mobile only */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <GradientButton size="sm">Join Waitlist</GradientButton>
+          <button
+            className="nav-ham"
+            onClick={() => setMenuOpen((o) => !o)}
+            style={{
+              display: 'none', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+              gap: 5, width: 44, height: 44,
+              background: 'transparent', border: 'none', cursor: 'pointer', padding: 0
+            }}>
+            <span style={{ width: 22, height: 2, background: C.text, borderRadius: 2, display: 'block', transition: 'all 0.3s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
+            <span style={{ width: 22, height: 2, background: C.text, borderRadius: 2, display: 'block', transition: 'all 0.3s', opacity: menuOpen ? 0 : 1 }} />
+            <span style={{ width: 22, height: 2, background: C.text, borderRadius: 2, display: 'block', transition: 'all 0.3s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
+          </button>
+        </div>
       </div>
       {/* Mobile overlay menu */}
       {menuOpen &&
@@ -341,9 +357,6 @@ const Nav = () => {
           borderBottom: `1px solid ${C.hairlineSoft}`
         }}>{l}</a>
         )}
-        <div style={{ marginTop: 16 }}>
-          <GradientButton size="lg" style={{ width: '100%' }}>Join Waitlist</GradientButton>
-        </div>
       </div>
       }
     </nav>
@@ -354,7 +367,7 @@ const Nav = () => {
 // HERO
 // =====================================================================
 const Hero = () =>
-<section style={{
+<section className="hero-section" style={{
   position: 'relative',
   minHeight: '92vh',
   paddingTop: 140,
@@ -407,7 +420,7 @@ const Hero = () =>
         Fantasy Pro League brings competitive virtual football into a fantasy format where real club performances, player stats, and weekly results shape the leaderboard.
       </p>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 56, flexWrap: 'wrap' }}>
+      <div className="hero-buttons" style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 56, flexWrap: 'wrap' }}>
         <GradientButton size="lg" icon={
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -432,7 +445,7 @@ const Hero = () =>
           { val: '48,212', lbl: 'Managers' }
         ].map((s, i) =>
         <div key={i}>
-          <div style={{
+          <div className="stats-val" style={{
             fontFamily: FONT,
             fontSize: 32, fontWeight: 700,
             color: C.text,
@@ -1706,7 +1719,7 @@ const GetTheApp = () =>
         Push notifications the second your captain scores. One-tap transfers. Match-day chat with your league. Built for the 90+5.
       </p>
 
-      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+      <div className="store-buttons" style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
         <StoreButton store="apple" />
         <StoreButton store="google" />
       </div>
